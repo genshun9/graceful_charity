@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "./js",
+    "module": "commonjs",
+    "target": "es6"
+  },
+  "exclude": [
+    "elm-stuff",
+    "js",
+    "public",
+    "node_modules",
+    "tests"
+  ],
+  "include": [
+    "src/server"
+  ]
+}

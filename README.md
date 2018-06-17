@@ -11,4 +11,5 @@
 
 ## 課題
 - elmとsocket.ioの相性が悪く、★が最も多い[socketioライブラリ](mgold/elm-socketio)がelm-langのv0.18に対応していないので、elmをやめる。
-- react/react-redux/redux周りのライブラリを最新で動かすと動かないので、半年分バージョンを下げてみた
+- react/react-redux/redux周りのライブラリを最新で動かすと動かないので、半年分バージョンを下げてみた。
+- react/reduxとsocket.ioは[こちら](https://github.com/raineroviir/react-redux-socketio-chat)を参考にした。

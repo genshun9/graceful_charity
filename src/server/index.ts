@@ -2,15 +2,20 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as socketIo from 'socket.io';
+import * as path from "path";
 
 /**
  * express設定
  * post処理に、req.bodyがunderfindになるので、body-parserを利用
- * elm-app build でbuild先にbundle.jsを出力するのでそちらを参照する
+ * まず最初に、index.htmlを返却する
+ * 次に、index.html内で/distへのgetリクエストが走るので、parcelで出力した_index.htmlを返却する
  * ポート8000を指定し、リクエスト待機状態にする
  */
 const app = express();
-app.use(express.static('./build'));
+app.use(express.static('./'));
+app.get('/dist', (req, res) => {
+  res.sendFile(path.resolve(__dirname + "/../../dist/_index.html"));
+});
 app.use(bodyParser.urlencoded({extended: true}));
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

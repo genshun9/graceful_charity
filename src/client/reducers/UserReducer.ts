@@ -1,9 +1,13 @@
+import User from '../models/User';
+
 interface UserState {
-  userName: string
+  userName: string,
+  users: User[]
 }
 
 const initState: UserState = {
-  userName: ""
+  userName: "",
+  users: []
 };
 
 export const UserReducer = (state: UserState = initState, action) => {
@@ -12,6 +16,11 @@ export const UserReducer = (state: UserState = initState, action) => {
         return Object.assign({}, state, {
           userName: action.payload
         });
+
+    case 'SEND_USER_NAME':
+      return Object.assign({}, state, {
+        userName: ""
+      });
 
     default:
       return state

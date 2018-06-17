@@ -1,12 +1,9 @@
 # Distribution
-build/*
+dist/*
 js/*
 
-# elm-package generated files
-elm-stuff/*
-
-# elm-repl generated files
-repl-temp-*
+# parcel generated files
+.cache/*
 
 # Dependency directories
 node_modules/*

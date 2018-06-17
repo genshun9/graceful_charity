@@ -1,55 +1,72 @@
-module Main exposing (..)
+import Html exposing (..)
+import Html.Events exposing (..)
+import WebSocket
 
-import Html exposing (Html, text, div, h1, img)
-import Html.Attributes exposing (src)
+main =
+  Html.program
+    { init = init
+    , view = view
+    , update = update
+    , subscriptions = subscriptions
+    }
 
 
----- MODEL ----
-
+-- MODEL
 
 type alias Model =
-    {}
+  { input : String
+  , messages : List String
+  }
 
 
-init : ( Model, Cmd Msg )
+init : (Model, Cmd Msg)
 init =
-    ( {}, Cmd.none )
+  (Model "" [], Cmd.none)
 
 
-
----- UPDATE ----
-
+-- UPDATE
 
 type Msg
-    = NoOp
+  = Input String
+  | Send
+  | NewMessage String
 
 
-update : Msg -> Model -> ( Model, Cmd Msg )
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
-    ( model, Cmd.none )
+  case msg of
+    Input newInput ->
+      ( { model | input = newInput }, Cmd.none)
+
+    Send ->
+      ( { model | input = "" }, WebSocket.send "http://localhost:8000" model.input)
+
+    NewMessage str ->
+        let
+            newMessages = str :: model.messages
+        in
+      ( { model | messages = newMessages }, Cmd.none)
+
+
+-- SUBSCRIPTIONS
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+     WebSocket.listen "http://localhost:8000" NewMessage
 
 
 
----- VIEW ----
-
+-- VIEW
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Your Elm App is working!" ]
-        ]
+  div []
+    [ div [] (List.map viewMessage model.messages)
+    , input [onInput Input] []
+    , button [onClick Send] [text "Send"]
+    ]
 
 
-
----- PROGRAM ----
-
-
-main : Program Never Model Msg
-main =
-    Html.program
-        { view = view
-        , init = init
-        , update = update
-        , subscriptions = always Sub.none
-        }
+viewMessage : String -> Html msg
+viewMessage msg =
+  div [] [ text msg ]

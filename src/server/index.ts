@@ -8,8 +8,7 @@ import * as path from "path";
  * express設定
  * post処理に、req.bodyがunderfindになるので、body-parserを利用
  * まず最初に、index.htmlを返却する
- * 次に、index.html内で/distへのgetリクエストが走るので、parcelで出力した_index.htmlを返却する
- * ポート8000を指定し、リクエスト待機状態にする
+ * そのindex.html内で/distへのgetリクエストが走るので、parcelで出力した_index.htmlを返却する
  */
 const app = express();
 app.use(express.static('./'));
@@ -17,17 +16,18 @@ app.get('/dist', (req, res) => {
   res.sendFile(path.resolve(__dirname + "/../../dist/_index.html"));
 });
 app.use(bodyParser.urlencoded({extended: true}));
-const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => {
-  console.log(`listening on *:${PORT}`);
-});
 
 /**
- * httpサーバ設定し、express設定を付与
- * webSocketの機能を、httpサーバに付与
+ * httpサーバ設定
+ * 上記のexpress設定をhttpサーバに付与する
+ * ポート8000を開き、webSocketをlistenする
  */
 const server = http.createServer(app);
 const io = socketIo.listen(server);
+const PORT = process.env.PORT || 8000;
+server.listen(PORT, () => {
+  console.log('listening!');
+});
 
 /**
  * キャッシュデータをまとめる

@@ -3,6 +3,7 @@ import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as socketIo from 'socket.io';
 import * as path from "path";
+import User from './models/User';
 
 /**
  * express設定
@@ -32,7 +33,7 @@ server.listen(PORT, () => {
 /**
  * キャッシュデータをまとめる
  */
-var user = [];
+var userCache:User[] = [];
 
 /**
  * socket.io設定
@@ -40,9 +41,9 @@ var user = [];
 io.sockets.on('connection', (socket) => {
   // 接続開始
   socket.on('connected', (userName: string) => {
-    console.log("here");
-    user[socket.id] = {userName, id: socket.id};
-    io.sockets.emit('publish', {value: socket.id});
+    const user:User = new User({userID: socket.id, userName, draftDeckList: [], handCardList: []});
+    userCache.push(user);
+    io.sockets.emit('publish', {value: user, type: 'LOGIN_SUCCESS'});
   });
 
   // メッセージ送信イベント
@@ -54,7 +55,7 @@ io.sockets.on('connection', (socket) => {
   // 接続終了イベント
   socket.on('disconnect', () => {
     console.log("disconnect");
-    delete user[socket.id];
+    // delete user[socket.id];
     io.sockets.emit("publish", {});
   });
 

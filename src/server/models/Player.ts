@@ -23,10 +23,10 @@ export default class Player {
   }
 
   // プレイヤーが手札からカードを1枚ピックする時
-  pick(cardID: string, cardURL: string): Player {
+  pick(props: {cardID: string, cardURL: string}): Player {
     // Immutableを使わないので破壊的メソッドを使う
-    this.draftDeckList.push(Card.create({cardID, cardURL}));
-    this.handCardList.picked(cardID);
+    this.draftDeckList.push(Card.create(props));
+    this.handCardList.picked(props.cardID);
     return this;
   }
 

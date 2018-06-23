@@ -5,7 +5,6 @@ import * as socketIo from 'socket.io';
 import * as path from "path";
 import Player from './models/Player';
 import Card from "./models/Card";
-import HandCardList from "./models/HandCard";
 
 /**
  * express設定
@@ -21,6 +20,17 @@ app.get('/dist', (req, res) => {
 app.use(bodyParser.urlencoded({extended: true}));
 
 /**
+ * デバッグ用キャッシュ確認エンドポイント
+ */
+app.get('/cache', (_, res) => {
+  console.log(playerCache);
+  console.log(allCardCache);
+  console.log(pickedUserCount);
+  console.log(rotationCount);
+  res.sendStatus(200);
+});
+
+/**
  * httpサーバ設定
  * 上記のexpress設定をhttpサーバに付与する
  * ポート8000を開き、webSocketをlistenする
@@ -29,29 +39,51 @@ const server = http.createServer(app);
 const io = socketIo.listen(server);
 const PORT = process.env.PORT || 8000;
 server.listen(PORT, () => {
-  console.log('listening!');
+  console.log(`listening on PORT: ${PORT}`);
 });
 
 /**
  * キャッシュデータをまとめる
  */
-var playerCache:Player[] = [];
+var playerCache: Player[] = [];
+var allCardCache: Card[] = [];
+var pickedUserCount: number = 0;
+var rotationCount: number = 0;
 
 /**
  * socket.io設定
  */
 io.sockets.on('connection', (socket) => {
-  // 接続開始
-  socket.on('connected', (playerName: string) => {
-    console.log("here");
-    const player:Player = Player.create({
+  // ログイン
+  socket.on('LOGIN', (playerName: string) => {
+    const player: Player = Player.create({
       playerID: socket.id,
       playerName,
       draftDeckList: [],
       handCardList: []
     });
     playerCache.push(player);
-    io.sockets.emit('publish', {value: player, type: 'LOGIN_SUCCESS'});
+    io.sockets.emit('LOGIN_SUCCESS', {value: player, playerID: player.playerID});
+
+    // プレイヤー数が6人になったら、ドラフト開始する
+    if (playerCache.length === 6) {
+      io.sockets.emit('DRAFT', {value: playerCache});
+    }
+  });
+
+  // ピック
+  socket.on('PICK', (pickData: { playerID: string, cardID: string, cardURL: string }) => {
+    playerCache.find(p => p.playerID === pickData.playerID)
+      .pick({cardID: pickData.cardID, cardURL: pickData.cardURL});
+    pickedUserCount++;
+    io.sockets.emit('PICK_SUCCESS', {playerID: pickData.playerID});
+
+    // 全員がピック完了したら、ドラフトをする（仮に、各巡12回を上限とする）
+    if (pickedUserCount === 6 && rotationCount !== 12) {
+      pickedUserCount = 0;
+      rotationCount++;
+      io.sockets.emit('DRAFT', {value: playerCache});
+    }
   });
 
   // メッセージ送信イベント

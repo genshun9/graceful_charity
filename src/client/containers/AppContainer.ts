@@ -28,7 +28,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onChangeUserName: text => dispatch(UserActionCreator.changeUserName(text)),
     onClickSendUserName: text => {
-      socket.emit("connected", text);
+      socket.emit("LOGIN", text);
       dispatch(UserActionCreator.sendUserName(text))
     }
   }

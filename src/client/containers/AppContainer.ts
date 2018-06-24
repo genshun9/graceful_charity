@@ -1,7 +1,7 @@
 import {connect} from 'react-redux';
 import AppComponent from "../components/AppComponent";
-import UserActionCreator from "../actions/UserActionCreator";
-import User from "../models/User";
+import PlayerActionCreator from "../actions/PlayerActionCreator";
+import Player from "../models/Player";
 import * as io from "socket.io-client";
 
 export type Socket = SocketIOClient.Socket
@@ -10,26 +10,26 @@ const socket: Socket = io.connect('http://localhost:8000');
 
 export interface AppProps {
   socket: Socket,
-  userName: string,
-  users: User[],
-  onChangeUserName: (text: string) => {},
-  onClickSendUserName: (text: string) => {}
+  playerName: string,
+  players: Player[],
+  onChangePlayerName: (text: string) => {},
+  onClickSendPlayerName: (text: string) => {}
 }
 
 const mapStateToProps = state => {
   return {
     socket: socket,
-    userName: state.UserReducer.userName,
-    users: state.UserReducer.users
+    playerName: state.PlayerReducer.playerName,
+    players: state.PlayerReducer.players
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onChangeUserName: text => dispatch(UserActionCreator.changeUserName(text)),
-    onClickSendUserName: text => {
+    onChangePlayerName: text => dispatch(PlayerActionCreator.changePlayerName(text)),
+    onClickSendPlayerName: text => {
       socket.emit("LOGIN", text);
-      dispatch(UserActionCreator.sendUserName(text))
+      dispatch(PlayerActionCreator.sendPlayerName(text))
     }
   }
 };

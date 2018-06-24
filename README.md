@@ -14,3 +14,6 @@
 - react/react-redux/redux周りのライブラリを最新で動かすと動かないので、半年分バージョンを下げてみた。
 - react/reduxとsocket.ioは[こちら](https://github.com/raineroviir/react-redux-socketio-chat)を参考にした。
 - socketioがつながらなかったが[こちら](https://qiita.com/kanjishima/items/5342eca62e8d5de30ccb)を読んで解消した。expressではなく、httpサーバをlistenする必要があった。
+- 各actionとsocket-ioの繋ぎ込みが便利なので、reducer内で管理してみた。
+    - 結果的に、各containerのmapDispatchToPropsで、socket-ioとtextを引数にactionへ渡すボイラープレートが増えた。
+    - なので、コンポーネントの最上段で定義をし、そこから子コンポーネントへ流すように実装してみる。

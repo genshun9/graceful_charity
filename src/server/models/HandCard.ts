@@ -3,11 +3,11 @@ import Card from "./Card";
 export default class HandCardList {
   handCard: Card[];
 
-  constructor(props: {cardID: string, cardURL: string}[]) {
-    this.handCard = props.map(p => Card.create(p));
+  constructor(props: Card[]) {
+    this.handCard = props;
   }
 
-  static create(props: {cardID: string, cardURL: string}[]) {
+  static create(props: Card[]) {
     return new HandCardList(props);
   }
 

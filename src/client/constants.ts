@@ -7,3 +7,6 @@ export const GAME_PROGRESS = {
 export const CHANGE_PLAYER_NAME = 'CHANGE_PLAYER_NAME';
 export const SEND_PLAYER_NAME = 'SEND_PLAYER_NAME';
 export const CHANGE_PROGRESS = 'CHANGE_PROGRESS';
+
+// socketio関連のメッセージ
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';

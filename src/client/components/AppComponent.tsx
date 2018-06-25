@@ -23,6 +23,7 @@ const AppComponent = WithLifecycleComponent<AppProps>(
       socket.on('connected', (name: string) => {});
       socket.on('disconnect', () => {});
       socket.on('publish', (data: any) => {});
+      socket.on('LOGIN_SUCCESS', (data: any) => props.loginSuccess(data))
     }
   }
 );

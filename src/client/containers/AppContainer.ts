@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import AppComponent from "../components/AppComponent";
 import * as io from "socket.io-client";
+import ApplicationActionCreator from "../actions/ApplicationActionCreator";
 
 export type Socket = SocketIOClient.Socket
 
@@ -9,7 +10,8 @@ export const socket: Socket = io.connect('http://localhost:8000');
 
 export interface AppProps {
   socket: Socket,
-  gameProgress: number
+  gameProgress: number,
+  loginSuccess: (data:any) => {}
 }
 
 const mapStateToProps = state => {
@@ -20,7 +22,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-  return {}
+  return {
+    loginSuccess: data => dispatch(ApplicationActionCreator.loginSuccess(data))
+  }
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AppComponent)

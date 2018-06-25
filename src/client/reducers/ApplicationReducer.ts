@@ -1,16 +1,18 @@
+import {CHANGE_PROGRESS, GAME_PROGRESS} from "../constants";
+
 interface ApplicationState {
   gameProgress: number;
 }
 
 const initState: ApplicationState = {
-  gameProgress: 1
+  gameProgress: GAME_PROGRESS.NOT_LOGIN
 };
 
 export const ApplicationReducer = (state: ApplicationState = initState, action) => {
   switch (action.type) {
-    case 'CHANGE_PROGRESS':
+    case CHANGE_PROGRESS:
       return Object.assign({}, state, {
-        gameProgress: 2
+        gameProgress: GAME_PROGRESS.LOGIN
       });
 
     default:

@@ -2,9 +2,10 @@ import * as React from 'react';
 import WithLifecycleComponent from './WithLifecycleComponent';
 import {AppProps} from "../containers/AppContainer";
 import LoginContainer from "../containers/LoginContainer";
+import {GAME_PROGRESS} from "../constants";
 
 const AppComponentSFC: React.SFC<AppProps> = props => {
-  if (props.gameProgress === 1) {
+  if (props.gameProgress === GAME_PROGRESS.NOT_LOGIN) {
     return (
       <LoginContainer/>
     )

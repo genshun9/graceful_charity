@@ -2,6 +2,7 @@ import {connect} from 'react-redux';
 import AppComponent from "../components/AppComponent";
 import * as io from "socket.io-client";
 import ApplicationActionCreator from "../actions/ApplicationActionCreator";
+import Player from "../models/Player";
 
 export type Socket = SocketIOClient.Socket
 
@@ -11,19 +12,25 @@ export const socket: Socket = io.connect('http://localhost:8000');
 export interface AppProps {
   socket: Socket,
   gameProgress: number,
-  loginSuccess: (data:any) => {}
+  connecting: boolean,
+  players: Player[],
+  loginSuccess: (data: any) => {},
+  firstRoundStart: (data: any) => {}
 }
 
 const mapStateToProps = state => {
   return {
     socket: socket,
-    gameProgress: state.ApplicationReducer.gameProgress
+    gameProgress: state.ApplicationReducer.gameProgress,
+    connecting: state.ApplicationReducer.connecting,
+    players: state.ApplicationReducer.players
   }
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    loginSuccess: data => dispatch(ApplicationActionCreator.loginSuccess(data))
+    loginSuccess: data => dispatch(ApplicationActionCreator.loginSuccess(data)),
+    firstRoundStart: data => dispatch(ApplicationActionCreator.firstRoundStart(data))
   }
 };
 

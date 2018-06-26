@@ -1,26 +1,26 @@
 import Player from '../models/Player';
-import {CHANGE_PLAYER_NAME, SEND_PLAYER_NAME} from "../constants";
+import {FIRST_ROUND_START, GAME_PROGRESS, LOGIN_SUCCESS} from "../constants/Constants";
 
 interface PlayerState {
-  playerName: string,
-  players: Player[]
+  me: Player;
+  selectingCardID: string;
 }
 
 const initState: PlayerState = {
-  playerName: "",
-  players: []
+  me: null,
+  selectingCardID: ''
 };
 
 export const PlayerReducer = (state: PlayerState = initState, action) => {
   switch (action.type) {
-    case CHANGE_PLAYER_NAME:
-        return Object.assign({}, state, {
-          playerName: action.payload
-        });
-
-    case SEND_PLAYER_NAME:
+    case LOGIN_SUCCESS:
       return Object.assign({}, state, {
-        playerName: ""
+        me: null
+      });
+
+    case FIRST_ROUND_START:
+      return Object.assign({}, state, {
+        me: null
       });
 
     default:

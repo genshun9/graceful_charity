@@ -1,18 +1,36 @@
-import {LOGIN_SUCCESS} from "../constants";
+import {CHANGE_PLAYER_NAME, FIRST_ROUND_START, LOGIN_SUCCESS, SEND_PLAYER_NAME} from "../constants/Constants";
 
 class ApplicationActionCreator {
   constructor(){
   }
 
+  public changePlayerName(text: string) {
+    return {
+      type: CHANGE_PLAYER_NAME,
+      payload: text
+    }
+  }
+
+  public sendPlayerName(text: string) {
+    return {
+      type: SEND_PLAYER_NAME,
+      payload: text
+    }
+  }
+
   public loginSuccess(data: any) {
-    console.log(data);
     return {
       type: LOGIN_SUCCESS,
       payload: data
     }
   }
 
-
+  public firstRoundStart(data: any) {
+    return {
+      type: FIRST_ROUND_START,
+      payload: data
+    }
+  }
 }
 
 export default new ApplicationActionCreator();

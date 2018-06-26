@@ -62,15 +62,16 @@ var rotationCount: number = 0;
  */
 io.sockets.on('connection', (socket) => {
   // ログイン
-  socket.on('LOGIN', (playerName: string) => {
+  socket.on('LOGIN', (data:{text: string, randomID: string}) => {
     const player: Player = Player.create({
       playerID: playerCache.length, //socket.id,
-      playerName,
+      playerName: data.text,
       draftDeckList: [],
       handCardList: []
     });
     playerCache.push(player);
-    io.sockets.emit('LOGIN_SUCCESS', {value: player, playerID: player.playerID});
+    io.sockets.emit('LOGIN_SUCCESS',
+        {value: {player, players: playerCache, randomID: data.randomID}, playerID: player.playerID});
 
     // プレイヤー数が6人になったら、ドラフト開始する
     if (playerCache.length === PLAYER_MAX_NUMBER) {

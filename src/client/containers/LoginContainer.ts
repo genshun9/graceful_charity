@@ -6,14 +6,16 @@ import ApplicationActionCreator from "../actions/ApplicationActionCreator";
 
 export interface LoginProps {
   inputPlayerName: string,
+  randomID: string,
   players: Player[],
   onChangePlayerName: (text: string) => {},
-  onClickSendPlayerName: (text: string) => {}
+  onClickSendPlayerName: (text: string, randomID: string) => {}
 }
 
 const mapStateToProps = state => {
   return {
     inputPlayerName: state.ApplicationReducer.inputPlayerName,
+    randomID: state.PlayerReducer.randomID,
     players: state.ApplicationReducer.players
   }
 };
@@ -21,8 +23,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onChangePlayerName: text => dispatch(ApplicationActionCreator.changePlayerName(text)),
-    onClickSendPlayerName: text => {
-      socket.emit("LOGIN", text);
+    onClickSendPlayerName: (text, randomID) => {
+      socket.emit("LOGIN", {text, randomID});
       dispatch(ApplicationActionCreator.sendPlayerName(text))
     }
   }

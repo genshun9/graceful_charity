@@ -5,7 +5,7 @@ const LoginComponent: React.SFC<LoginProps> = props => {
   return (
     <div>
       <input value={props.inputPlayerName} onChange={e => props.onChangePlayerName(e.target.value)}/>
-      <button onClick={() => props.onClickSendPlayerName(props.inputPlayerName)}>送信</button>
+      <button onClick={() => props.onClickSendPlayerName(props.inputPlayerName, props.randomID)}>送信</button>
     </div>
   )
 };

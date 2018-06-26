@@ -29,12 +29,13 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       });
 
     case LOGIN_SUCCESS:
-      console.log("LOGIN_SUCCESS", action.payload);
-      return Object.assign({}, state, {
+      const updateState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.LOGIN,
         connecting: false,
-        players: []
+        players: action.payload.value.players.map(p => Player.create(p))
       });
+      console.log(updateState);
+      return updateState;
 
     case FIRST_ROUND_START:
       return Object.assign({}, state, {

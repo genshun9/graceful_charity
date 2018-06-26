@@ -13,10 +13,10 @@ export default class Player {
     this.handCardList = props.handCardList;
   }
 
-  static create(props: { playerID: number, playerName: string, draftDeckList: any[], handCardList: any[]}) {
+  static create(props: { playerID: number, playerName: string, draftDeckList: any[], handCardList: any}) {
     return new Player(Object.assign({}, props, {
-      draftDeckList: [],
-      handCardList: []
+      draftDeckList: props.draftDeckList ? props.draftDeckList.map(d => Card.create(d)) : [],
+      handCardList: props.handCardList ? props.handCardList.handCard.map(h => Card.create(h)) : []
     }));
   }
 }

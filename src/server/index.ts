@@ -97,7 +97,7 @@ io.sockets.on('connection', (socket) => {
         handCardList.push(trapCardCache[p.playerID]);
         p.draft(HandCardList.create(handCardList));
       });
-      io.sockets.emit('DRAFT', {value: playerCache});
+      io.sockets.emit('FIRST_ROUND_START', {value: playerCache});
     }
   });
 

@@ -29,20 +29,20 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       });
 
     case LOGIN_SUCCESS:
-      const updateState = Object.assign({}, state, {
+      const loginSuccessState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.LOGIN,
         connecting: false,
         players: action.payload.value.players.map(p => Player.create(p))
       });
-      console.log(updateState);
-      return updateState;
+      return loginSuccessState;
 
     case FIRST_ROUND_START:
-      return Object.assign({}, state, {
+      const firstRoundStartState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.FIRST_ROUND,
         connecting: false,
-        players: []
+        players: action.payload.value.map(p => Player.create(p))
       });
+      return firstRoundStartState;
 
     case SECOND_ROUND_START:
       return Object.assign({}, state, {

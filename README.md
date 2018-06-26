@@ -17,3 +17,5 @@
 - 各actionとsocket-ioの繋ぎ込みが便利なので、reducer内で管理してみた。
     - 結果的に、各containerのmapDispatchToPropsで、socket-ioとtextを引数にactionへ渡すボイラープレートが増えた。
     - なので、コンポーネントの最上段で定義をし、そこから子コンポーネントへ流すように実装してみる。
+- parcelで出力されるjsがランダムな名前なので、dist配下のjsを取得するように、<object>タグを使ってみた。
+    - その結果、スタイルが高さ156pxに固定されてしまったので、entry.jsの名前をべた書きしてみる。

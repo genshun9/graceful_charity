@@ -7,6 +7,7 @@ import ApplicationActionCreator from "../actions/ApplicationActionCreator";
 export interface LoginProps {
   inputPlayerName: string,
   randomID: string,
+  player: Player,
   players: Player[],
   onChangePlayerName: (text: string) => {},
   onClickSendPlayerName: (text: string, randomID: string) => {}
@@ -15,6 +16,7 @@ export interface LoginProps {
 const mapStateToProps = state => {
   return {
     inputPlayerName: state.ApplicationReducer.inputPlayerName,
+    player: state.PlayerReducer.me,
     randomID: state.PlayerReducer.randomID,
     players: state.ApplicationReducer.players
   }

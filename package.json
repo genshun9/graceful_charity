@@ -8,7 +8,8 @@
   },
   "scripts": {
     "client-compile": "./node_modules/.bin/parcel _index.html",
-    "server-compile": "rm -rf js && ./node_modules/.bin/tsc && node js/server/index.js"
+    "server-compile": "rm -rf js && ./node_modules/.bin/tsc && node js/server/index.js",
+    "server-run": "node js/server/index.js"
   },
   "repository": {
     "type": "git",

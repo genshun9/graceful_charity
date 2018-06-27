@@ -3,6 +3,7 @@ import WithLifecycleComponent from './WithLifecycleComponent';
 import {AppProps, Socket} from "../containers/AppContainer";
 import LoginContainer from "../containers/LoginContainer";
 import {FIRST_ROUND_START, GAME_PROGRESS, LOGIN_SUCCESS} from "../constants/Constants";
+import DraftContainer from "../containers/DraftContainer";
 
 const AppComponentSFC: React.SFC<AppProps> = props => {
   if (props.gameProgress === GAME_PROGRESS.NOT_LOGIN || props.gameProgress === GAME_PROGRESS.LOGIN) {
@@ -14,7 +15,7 @@ const AppComponentSFC: React.SFC<AppProps> = props => {
     || props.gameProgress === GAME_PROGRESS.THIRD_ROUND
   ) {
     return (
-      <div>ドラフト開始</div>
+      <DraftContainer/>
     )
   } else {
     return (

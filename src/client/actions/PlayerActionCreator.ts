@@ -1,20 +1,20 @@
-import {CHANGE_PLAYER_NAME} from "../constants/Constants";
+import {PICK_CARD, SELECT_CARD} from "../constants/Constants";
 
 class PlayerActionCreator {
   constructor() {
   }
 
-  public selectCard() {
+  public selectCard(cardID: string) {
     return {
-      type: "",
-      payload: ""
+      type: SELECT_CARD,
+      payload: cardID
     }
   }
 
-  public sendCard() {
+  public pickCard() {
     return {
-      type: "",
-      payload: ""
+      type: PICK_CARD,
+      payload: {}
     }
   }
 }

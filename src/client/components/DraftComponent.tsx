@@ -8,8 +8,11 @@ const DraftComponent: React.SFC<DraftProps> = props => {
   const card:Card[] = src.map(s => new Card({name: s, cardID: s, cardURL: s}));
   return (
     <div>
+      <button disabled={props.selectingCardID === "NotSelect" || props.selectingCardID === "Picked"}
+              onClick={() => props.onClickPick({cardID: props.selectingCardID, playerID: props.me.playerID})}>ピックする
+      </button>
       {card.map((c, i) => (
-            <span key={`card-${i}`}>
+          <span key={`card-${i}`}>
               {(i + 1) % 5 === 0 ? <p/> : null}
             <CardComponent card={c} onClickCard={cardID => props.onClickCard(cardID)}/>
             </span>

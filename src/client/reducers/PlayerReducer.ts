@@ -1,16 +1,22 @@
 import Player from '../models/Player';
-import {FIRST_ROUND_START, GAME_PROGRESS, LOGIN_SUCCESS} from "../constants/Constants";
+import {FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SELECT_CARD} from "../constants/Constants";
+
+export type NotSelect = "NotSelect";
+export type Selecting = string;
+export type Picked = "Picked";
+
+export type SelectState = NotSelect | Selecting | Picked;
 
 interface PlayerState {
   me: Player;
   randomID: string; // ログイン前に自分のIDがわからないので、ログイン時にランダムの文字列をサーバへ送る
-  selectingCardID: string;
+  selectingCardID: SelectState;  // 未選択・選択・決定済みの3つの状態
 }
 
 const initState: PlayerState = {
   me: null,
   randomID: Math.random().toString(36).slice(-8),
-  selectingCardID: ''
+  selectingCardID: "NotSelect"
 };
 
 export const PlayerReducer = (state: PlayerState = initState, action) => {
@@ -27,6 +33,18 @@ export const PlayerReducer = (state: PlayerState = initState, action) => {
         me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
       });
       return firstRoundStartState;
+
+    case SELECT_CARD:
+      const selectCardState = Object.assign({}, state, {
+        selectingCardID: action.payload
+      });
+      return selectCardState;
+
+    case PICK_CARD:
+      const pickCardState = Object.assign({}, state, {
+        selectingCardID: "Picked"
+      });
+      return pickCardState;
 
     default:
       return state

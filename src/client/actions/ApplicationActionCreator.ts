@@ -1,5 +1,5 @@
 import {
-  CHANGE_PLAYER_NAME, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS,
+  CHANGE_PLAYER_NAME, DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS,
   SEND_PLAYER_NAME
 } from "../constants/Constants";
 
@@ -38,6 +38,13 @@ class ApplicationActionCreator {
   public pickSuccess(data: any) {
     return {
       type: PICK_SUCCESS,
+      payload: data
+    }
+  }
+
+  public draft(data: any) {
+    return {
+      type: DRAFT,
       payload: data
     }
   }

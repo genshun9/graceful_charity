@@ -1,5 +1,5 @@
 import Player from '../models/Player';
-import {FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SELECT_CARD} from "../constants/Constants";
+import {DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SELECT_CARD} from "../constants/Constants";
 
 export type NotSelect = "NotSelect";
 export type Selecting = string;
@@ -45,6 +45,12 @@ export const PlayerReducer = (state: PlayerState = initState, action) => {
         selectingCardID: "Picked"
       });
       return pickCardState;
+
+    case DRAFT:
+      const draftState = Object.assign({}, state, {
+        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+      });
+      return draftState;
 
     default:
       return state

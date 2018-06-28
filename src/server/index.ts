@@ -115,6 +115,16 @@ io.sockets.on('connection', (socket) => {
     if (pickedUserCount === PLAYER_MAX_NUMBER && rotationCount !== 12) {
       pickedUserCount = 0;
       rotationCount++;
+
+      // とりあえずインクリメントしたIDのプレイヤーへカードを順次渡していく
+      const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
+      playerCache.forEach((p,i) => {
+        if (i  === 0) {
+          p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
+        } else {
+          p.draft(newHandCardList[p.playerID - 1])
+        }
+      });
       io.sockets.emit('DRAFT', {value: playerCache});
     }
   });

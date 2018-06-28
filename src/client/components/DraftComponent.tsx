@@ -1,23 +1,36 @@
 import * as React from "react";
 import {DraftProps} from "../containers/DraftContainer";
 import CardComponent from "./CardComponent";
-import Card from "../models/Card";
 
 const DraftComponent: React.SFC<DraftProps> = props => {
-  const src = ['4HZgkF5eTAsS', '4Sq6hpEqdAsS', '8lTB9DmqJh1F', 'iVIsWINQHhCU', 'T1Tr04WCwUZB', 'AHWIVNomv6qk'];
-  const card:Card[] = src.map(s => new Card({name: s, cardID: s, cardURL: s}));
-  return (
+  const pickButton = (
     <div>
       <button disabled={props.selectingCardID === "NotSelect" || props.selectingCardID === "Picked"}
-              onClick={() => props.onClickPick({cardID: props.selectingCardID, playerID: props.me.playerID})}>ピックする
+              onClick={() => props.onClickPick({cardID: props.selectingCardID, playerID: props.me.playerID})}>
+        ピックする
       </button>
-      {card.map((c, i) => (
+    </div>
+  );
+
+  const playerElm = (
+    <div>
+      {props.players.map(p => (
+        `${p.playerName} → `
+      ))}
+    </div>
+  );
+
+  return (
+    <div>
+      {pickButton}
+      {props.me.handCardList.map((c, i) => (
           <span key={`card-${i}`}>
               {(i + 1) % 5 === 0 ? <p/> : null}
             <CardComponent card={c} onClickCard={cardID => props.onClickCard(cardID)}/>
             </span>
         )
       )}
+      {playerElm}
     </div>
   )
 };

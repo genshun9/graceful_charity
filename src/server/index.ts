@@ -25,14 +25,17 @@ app.use(bodyParser.urlencoded({extended: true}));
  * デバッグ用キャッシュ確認エンドポイント
  */
 app.get('/cache', (_, res) => {
-  console.log(playerCache);
-  console.log(rareCardCache);
-  console.log(monsterCardCache);
-  console.log(magicCardCache);
-  console.log(trapCardCache);
-  console.log(pickedUserCount);
-  console.log(rotationCount);
-  res.sendStatus(200);
+  const cache = {
+    playerCache,
+    rareCardCache,
+    monsterCardCache,
+    magicCardCache,
+    trapCardCache,
+    pickedUserCount,
+    rotationCount
+  };
+
+  res.send(JSON.stringify(cache));
 });
 
 /**

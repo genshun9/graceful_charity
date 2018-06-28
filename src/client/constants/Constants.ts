@@ -18,3 +18,4 @@ export const LOGIN_SUCCESS:string = 'LOGIN_SUCCESS';
 export const FIRST_ROUND_START:string = 'FIRST_ROUND_START';
 export const SECOND_ROUND_START:string = 'SECOND_ROUND_START';
 export const THIRD_ROUND_START:string = 'THIRD_ROUND_START';
+export const PICK_SUCCESS:string = 'PICK_SUCCESS';

@@ -102,9 +102,9 @@ io.sockets.on('connection', (socket) => {
   });
 
   // ピック
-  socket.on('PICK', (pickData: { playerID: number, name: string, cardID: string, cardURL: string }) => {
+  socket.on('PICK', (pickData: { playerID: number, card: {name: string, cardID: string, cardURL: string }}) => {
     playerCache.find(p => p.playerID === pickData.playerID)
-      .pick({name: pickData.name, cardID: pickData.cardID, cardURL: pickData.cardURL});
+      .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL});
     pickedUserCount++;
     io.sockets.emit('PICK_SUCCESS', {playerID: pickData.playerID});
 

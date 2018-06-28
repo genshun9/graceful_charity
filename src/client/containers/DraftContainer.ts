@@ -4,6 +4,7 @@ import {Socket, socket} from "./AppContainer";
 import DraftComponent from "../components/DraftComponent";
 import {SelectState} from "../reducers/PlayerReducer";
 import PlayerActionCreator from "../actions/PlayerActionCreator";
+import Card from "../models/Card";
 
 export interface DraftProps {
   socket: Socket;
@@ -12,7 +13,7 @@ export interface DraftProps {
   selectingCardID: SelectState;
   players: Player[];
   onClickCard: (cardID: string) => {};
-  onClickPick: (props: {cardID: string, playerID: number}) => {};
+  onClickPick: (props: { card: Card, playerID: number }) => {};
 }
 
 const mapStateToProps = state => {
@@ -29,7 +30,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onClickCard: (cardID: string) => dispatch(PlayerActionCreator.selectCard(cardID)),
     onClickPick: (props) => {
-      socket.emit("PICK", { playerID: props.playerID, name: "", cardID: props.cardID, cardURL: ""});
+      socket.emit("PICK", {playerID: props.playerID, card: props.card});
       dispatch(PlayerActionCreator.pickCard())
     }
   }

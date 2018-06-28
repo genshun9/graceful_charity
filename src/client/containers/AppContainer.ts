@@ -15,7 +15,8 @@ export interface AppProps {
   connecting: boolean,
   players: Player[],
   loginSuccess: (data: any) => {},
-  firstRoundStart: (data: any) => {}
+  firstRoundStart: (data: any) => {},
+  pickSuccess: (data:any) => {}
 }
 
 const mapStateToProps = state => {
@@ -30,7 +31,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     loginSuccess: data => dispatch(ApplicationActionCreator.loginSuccess(data)),
-    firstRoundStart: data => dispatch(ApplicationActionCreator.firstRoundStart(data))
+    firstRoundStart: data => dispatch(ApplicationActionCreator.firstRoundStart(data)),
+    pickSuccess: data => dispatch(ApplicationActionCreator.pickSuccess(data))
   }
 };
 

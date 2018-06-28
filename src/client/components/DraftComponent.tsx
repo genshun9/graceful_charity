@@ -6,7 +6,10 @@ const DraftComponent: React.SFC<DraftProps> = props => {
   const pickButton = (
     <div>
       <button disabled={props.selectingCardID === "NotSelect" || props.selectingCardID === "Picked"}
-              onClick={() => props.onClickPick({cardID: props.selectingCardID, playerID: props.me.playerID})}>
+              onClick={() => {
+                const pickCard = props.me.handCardList.find(h => h.cardID === props.selectingCardID);
+                props.onClickPick({card: pickCard, playerID: props.me.playerID})
+              }}>
         ピックする
       </button>
     </div>

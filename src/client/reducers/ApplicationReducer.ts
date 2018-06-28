@@ -1,4 +1,7 @@
-import {CHANGE_PLAYER_NAME, GAME_PROGRESS, FIRST_ROUND_START, LOGIN_SUCCESS, SEND_PLAYER_NAME, SECOND_ROUND_START, THIRD_ROUND_START} from "../constants/Constants";
+import {
+  CHANGE_PLAYER_NAME, GAME_PROGRESS, FIRST_ROUND_START, LOGIN_SUCCESS, SEND_PLAYER_NAME, SECOND_ROUND_START,
+  THIRD_ROUND_START, PICK_SUCCESS
+} from "../constants/Constants";
 import Player from "../models/Player";
 
 interface ApplicationState {
@@ -53,6 +56,11 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       return Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.THIRD_ROUND
       });
+
+    case PICK_SUCCESS:
+      // 本来はaction.payload.playerIDに合致するユーザのみconnectingをfalseにしたかった。
+      return state;
+
 
     default:
       return state

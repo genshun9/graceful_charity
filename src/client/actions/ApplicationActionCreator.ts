@@ -1,4 +1,7 @@
-import {CHANGE_PLAYER_NAME, FIRST_ROUND_START, LOGIN_SUCCESS, SEND_PLAYER_NAME} from "../constants/Constants";
+import {
+  CHANGE_PLAYER_NAME, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS,
+  SEND_PLAYER_NAME
+} from "../constants/Constants";
 
 class ApplicationActionCreator {
   constructor(){
@@ -28,6 +31,13 @@ class ApplicationActionCreator {
   public firstRoundStart(data: any) {
     return {
       type: FIRST_ROUND_START,
+      payload: data
+    }
+  }
+
+  public pickSuccess(data: any) {
+    return {
+      type: PICK_SUCCESS,
       payload: data
     }
   }

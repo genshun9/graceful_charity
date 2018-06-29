@@ -102,14 +102,34 @@ io.sockets.on('connection', (socket) => {
       extraCardCache = changeOrderArray(extraCardCache, randomOrderForExtraCard);
 
       // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
-      // TODO 全部ではなく、21枚をhandCardListにセットする
       playerCache.forEach(p => {
         let handCardList: Card[] = [];
+        // レアカード2枚
         handCardList.push(rareCardCache[p.playerID]);
+        handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+        // モンスター10枚
         handCardList.push(monsterCardCache[p.playerID]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 9]);
+        // 魔法3枚
         handCardList.push(magicCardCache[p.playerID]);
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+        // 罠3枚
         handCardList.push(trapCardCache[p.playerID]);
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+        // Ex3枚
         handCardList.push(extraCardCache[p.playerID]);
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
         p.draft(HandCardList.create(handCardList));
       });
       round = ROUND.FIRST;

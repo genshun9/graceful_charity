@@ -5,7 +5,10 @@ import * as socketIo from 'socket.io';
 import * as path from "path";
 import Player from './models/Player';
 import Card from "./models/Card"
-import {PORT, PLAYER_MAX_NUMBER, rareCardList, monsterCardList, magicCardList, trapCardList} from "./constants";
+import {
+  PORT, PLAYER_MAX_NUMBER, rareCardList, monsterCardList, magicCardList, trapCardList,
+  extraCardList, ROTATION_MAX_NUMBER, ROUND
+} from "./constants";
 import HandCardList from "./models/HandCard";
 
 /**
@@ -31,8 +34,10 @@ app.get('/cache', (_, res) => {
     monsterCardCache,
     magicCardCache,
     trapCardCache,
+    extraCardCache,
     pickedUserCount,
-    rotationCount
+    rotationCount,
+    round
   };
 
   res.send(JSON.stringify(cache));
@@ -57,8 +62,10 @@ var rareCardCache: Card[] = rareCardList.map(c => Card.create(c));
 var monsterCardCache: Card[] = monsterCardList.map(c => Card.create(c));
 var magicCardCache: Card[] = magicCardList.map(c => Card.create(c));
 var trapCardCache: Card[] = trapCardList.map(c => Card.create(c));
+var extraCardCache: Card[] = extraCardList.map(c => Card.create(c));
 var pickedUserCount: number = 0;
 var rotationCount: number = 0;
+var round: number = ROUND.NO_START;
 
 /**
  * socket.io設定
@@ -90,16 +97,22 @@ io.sockets.on('connection', (socket) => {
       // 罠カードのランダマイズ
       const randomOrderForTrapCard = getRandomArray(trapCardCache.length);
       trapCardCache = changeOrderArray(trapCardCache, randomOrderForTrapCard);
+      // Exカードのランダマイズ
+      const randomOrderForExtraCard = getRandomArray(extraCardCache.length);
+      extraCardCache = changeOrderArray(extraCardCache, randomOrderForExtraCard);
 
       // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
+      // TODO 全部ではなく、21枚をhandCardListにセットする
       playerCache.forEach(p => {
         let handCardList: Card[] = [];
         handCardList.push(rareCardCache[p.playerID]);
         handCardList.push(monsterCardCache[p.playerID]);
         handCardList.push(magicCardCache[p.playerID]);
         handCardList.push(trapCardCache[p.playerID]);
+        handCardList.push(extraCardCache[p.playerID]);
         p.draft(HandCardList.create(handCardList));
       });
+      round = ROUND.FIRST;
       io.sockets.emit('FIRST_ROUND_START', {value: playerCache});
     }
   });
@@ -111,21 +124,63 @@ io.sockets.on('connection', (socket) => {
     pickedUserCount++;
     io.sockets.emit('PICK_SUCCESS', {playerID: pickData.playerID});
 
-    // 全員がピック完了したら、ドラフトをする（仮に、各巡12回を上限とする）
-    if (pickedUserCount === PLAYER_MAX_NUMBER && rotationCount !== 12) {
+    // 全員がピック完了したら、ドラフトをする
+    if (pickedUserCount === PLAYER_MAX_NUMBER && rotationCount !== ROTATION_MAX_NUMBER) {
       pickedUserCount = 0;
       rotationCount++;
 
-      // とりあえずインクリメントしたIDのプレイヤーへカードを順次渡していく
-      const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
-      playerCache.forEach((p,i) => {
-        if (i  === 0) {
-          p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
-        } else {
-          p.draft(newHandCardList[p.playerID - 1])
-        }
-      });
-      io.sockets.emit('DRAFT', {value: playerCache});
+      // 1巡目と3巡目の場合は、インクリメントしたIDのプレイヤーへカードを順次渡していく
+      if (round === ROUND.FIRST || round === ROUND.THIRD) {
+        const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
+        playerCache.forEach((p,i) => {
+          if (i  === 0) {
+            p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
+          } else {
+            p.draft(newHandCardList[p.playerID - 1])
+          }
+        });
+        io.sockets.emit('DRAFT', {value: playerCache});
+      }
+
+      // 2巡目の場合は、逆順にカードを順次渡していく
+      if (round === ROUND.SECOND) {
+        const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
+        playerCache.forEach((p,i) => {
+          if (i  === PLAYER_MAX_NUMBER - 1) {
+            p.draft(newHandCardList[0])
+          } else {
+            p.draft(newHandCardList[p.playerID + 1])
+          }
+        });
+        io.sockets.emit('DRAFT', {value: playerCache});
+      }
+    }
+
+    // FIRST_ROUNDで、全員がピック完了し、21巡したら、SECOND_ROUNDを開始する
+    if (round === ROUND.FIRST && pickedUserCount === PLAYER_MAX_NUMBER && rotationCount === ROTATION_MAX_NUMBER) {
+      pickedUserCount = 0;
+      rotationCount = 0;
+      round = ROUND.SECOND;
+      // TODO 21枚をhandCardListにセットする
+      io.sockets.emit('SECOND_ROUND_START', {value: playerCache});
+    }
+
+    // SECOND_ROUNDで、全員がピック完了し、21巡したら、THIRD_ROUNDを開始する
+    if (round === ROUND.SECOND && pickedUserCount === PLAYER_MAX_NUMBER && rotationCount === ROTATION_MAX_NUMBER) {
+      pickedUserCount = 0;
+      rotationCount = 0;
+      round = ROUND.SECOND;
+      // TODO 21枚をhandCardListにセットする
+      io.sockets.emit('THIRD_ROUND_START', {value: playerCache});
+
+    }
+
+    // THIRD_ROUNDで、全員がピック完了し、21巡したら、ピック終了となる
+    if (round === ROUND.THIRD && pickedUserCount === PLAYER_MAX_NUMBER && rotationCount === ROTATION_MAX_NUMBER) {
+      pickedUserCount = 0;
+      rotationCount = 0;
+      round = ROUND.END;
+      io.sockets.emit('END', {value: playerCache});
     }
   });
 

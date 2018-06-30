@@ -1,7 +1,7 @@
 import * as React from "react";
 import {DraftProps} from "../containers/DraftContainer";
 import CardComponent from "./CardComponent";
-import {Popover} from 'react-bootstrap'
+import {Button, OverlayTrigger, Popover} from 'react-bootstrap'
 
 const DraftComponent: React.SFC<DraftProps> = props => {
   const pickButton = (
@@ -16,11 +16,23 @@ const DraftComponent: React.SFC<DraftProps> = props => {
     </span>
   );
 
+  const popover = (
+    <Popover id="popover-trigger-click-root-close" title="デッキレシピ">
+      {props.me.draftDeckList.map((d, i) => (
+        <div key={`deck-${i}`}>{d.name}</div>
+      ))}
+    </Popover>
+  );
+
   const showDeckButton = (
     <span>
-      <Popover id="popover-trigger-click-root-close" title="デッキレシピ">
-        <strong>Holy guacamole!</strong>
-      </Popover>
+      <OverlayTrigger
+        trigger="click"
+        rootClose
+        placement="bottom"
+        overlay={popover}>
+        <Button>デッキレシピ</Button>
+      </OverlayTrigger>
     </span>
   );
 

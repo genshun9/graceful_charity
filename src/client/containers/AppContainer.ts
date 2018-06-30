@@ -3,11 +3,12 @@ import AppComponent from "../components/AppComponent";
 import * as io from "socket.io-client";
 import ApplicationActionCreator from "../actions/ApplicationActionCreator";
 import Player from "../models/Player";
+import {PUBLIC_IP} from "../constants/Constants";
 
 export type Socket = SocketIOClient.Socket
 
 // Containerの一番親であるAppContainerで定義してみる(Reducerで管理しない)
-export const socket: Socket = io.connect('http://localhost:8000');
+export const socket: Socket = io.connect(`http://${PUBLIC_IP}:8000`);
 
 export interface AppProps {
   socket: Socket,

@@ -1,3 +1,5 @@
+export const PUBLIC_IP = 'localhost';
+
 export const GAME_PROGRESS = {
   NOT_LOGIN: 1,
   LOGIN: 2,

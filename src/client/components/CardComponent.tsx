@@ -11,9 +11,9 @@ export interface CardProps {
 
 const CardComponent: React.SFC<CardProps> = props => {
   const style =
-    (props.selectingCardID === props.card.cardID) ? {width: 160, height: 232, border: "solid 5px blue"}
-    : (props.selectingCardID === "Picked" && props.selectedCardID === props.card.cardID) ? {width: 160, height: 232, border: "solid 5px Silver"}
-    : {width: 160, height: 232, border: "solid 5px transparent"};
+    (props.selectingCardID === props.card.cardID) ? {width: 120, border: "solid 5px blue"}
+    : (props.selectingCardID === "Picked" && props.selectedCardID === props.card.cardID) ? {width: 120, border: "solid 5px Silver"}
+    : {width: 120, border: "solid 5px transparent"};
   return (
     <span style={{padding: 4}}>
       <img src={`../../../src/assets/${props.card.cardURL}.jpg`}

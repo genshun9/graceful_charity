@@ -28,7 +28,7 @@ const DraftComponent: React.SFC<DraftProps> = props => {
       {pickButton}
       {props.me.handCardList.map((c, i) => (
           <span key={`card-${i}`}>
-              {(i + 1) % 5 === 0 ? <p/> : null}
+              {i % 7 === 0 ? <p/> : null}
             <CardComponent card={c}
                            onClickCard={cardID => props.onClickCard(cardID)}
                            selectingCardID={props.selectingCardID}

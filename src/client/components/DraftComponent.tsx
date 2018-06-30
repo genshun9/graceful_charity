@@ -29,7 +29,10 @@ const DraftComponent: React.SFC<DraftProps> = props => {
       {props.me.handCardList.map((c, i) => (
           <span key={`card-${i}`}>
               {(i + 1) % 5 === 0 ? <p/> : null}
-            <CardComponent card={c} onClickCard={cardID => props.onClickCard(cardID)}/>
+            <CardComponent card={c}
+                           onClickCard={cardID => props.onClickCard(cardID)}
+                           selectingCardID={props.selectingCardID}
+                           selectedCardID={props.selectedCardID}/>
             </span>
         )
       )}

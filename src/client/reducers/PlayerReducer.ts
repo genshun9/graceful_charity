@@ -11,12 +11,14 @@ interface PlayerState {
   me: Player;
   randomID: string; // ログイン前に自分のIDがわからないので、ログイン時にランダムの文字列をサーバへ送る
   selectingCardID: SelectState;  // 未選択・選択・決定済みの3つの状態
+  selectedCardID: string; // 選択後次のピックが始まるまでに、選択したカードの情報をviewで使うため
 }
 
 const initState: PlayerState = {
   me: null,
   randomID: Math.random().toString(36).slice(-8),
-  selectingCardID: "NotSelect"
+  selectingCardID: "NotSelect",
+  selectedCardID: ""
 };
 
 export const PlayerReducer = (state: PlayerState = initState, action) => {
@@ -42,13 +44,16 @@ export const PlayerReducer = (state: PlayerState = initState, action) => {
 
     case PICK_CARD:
       const pickCardState = Object.assign({}, state, {
-        selectingCardID: "Picked"
+        selectingCardID: "Picked",
+        selectedCardID: action.payload.value.cardID
       });
       return pickCardState;
 
     case DRAFT:
       const draftState = Object.assign({}, state, {
-        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID)),
+        selectingCardID: "NotSelect",
+        selectedCardID: ""
       });
       return draftState;
 

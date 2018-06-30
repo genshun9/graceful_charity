@@ -12,6 +12,7 @@ export interface DraftProps {
   me: Player;
   selectingCardID: SelectState;
   players: Player[];
+  selectedCardID: string;
   onClickCard: (cardID: string) => {};
   onClickPick: (props: { card: Card, playerID: number }) => {};
 }
@@ -22,7 +23,8 @@ const mapStateToProps = state => {
     connecting: state.ApplicationReducer.connecting,
     me: state.PlayerReducer.me,
     selectingCardID: state.PlayerReducer.selectingCardID,
-    players: state.ApplicationReducer.players
+    players: state.ApplicationReducer.players,
+    selectedCardID: state.PlayerReducer.selectedCardID
   }
 };
 
@@ -31,7 +33,7 @@ const mapDispatchToProps = dispatch => {
     onClickCard: (cardID: string) => dispatch(PlayerActionCreator.selectCard(cardID)),
     onClickPick: (props) => {
       socket.emit("PICK", {playerID: props.playerID, card: props.card});
-      dispatch(PlayerActionCreator.pickCard())
+      dispatch(PlayerActionCreator.pickCard(props.card))
     }
   }
 };

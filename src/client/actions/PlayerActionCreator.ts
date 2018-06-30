@@ -1,4 +1,5 @@
 import {PICK_CARD, SELECT_CARD} from "../constants/Constants";
+import Card from "../models/Card";
 
 class PlayerActionCreator {
   constructor() {
@@ -11,10 +12,10 @@ class PlayerActionCreator {
     }
   }
 
-  public pickCard() {
+  public pickCard(card: Card) {
     return {
       type: PICK_CARD,
-      payload: {}
+      payload: {value: card}
     }
   }
 }

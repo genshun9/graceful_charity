@@ -39,9 +39,13 @@ const DraftComponent: React.SFC<DraftProps> = props => {
 
   const playerElm = (
     <div>
-      {props.players.map(p => (
-        (props.gameProgress === GAME_PROGRESS.SECOND_ROUND) ? `${p.playerName} ← ` : `${p.playerName} → `
-      ))}
+      {props.players.map((p, i) => {
+        const style = (p.playerID === props.me.playerID) ? {color: "red"} : {color: "black"};
+        return (
+          (props.gameProgress === GAME_PROGRESS.SECOND_ROUND) ?
+            <span style={style} key={i}>{`${p.playerName} ← `}</span> : <span style={style} key={i}>{`${p.playerName} → `}</span>
+        )
+      })}
     </div>
   );
 

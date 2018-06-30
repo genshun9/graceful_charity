@@ -1,6 +1,6 @@
 import {
-  CHANGE_PLAYER_NAME, DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS,
-  SEND_PLAYER_NAME
+  CHANGE_PLAYER_NAME, DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS, SECOND_ROUND_START,
+  SEND_PLAYER_NAME, THIRD_ROUND_START
 } from "../constants/Constants";
 
 class ApplicationActionCreator {
@@ -31,6 +31,20 @@ class ApplicationActionCreator {
   public firstRoundStart(data: any) {
     return {
       type: FIRST_ROUND_START,
+      payload: data
+    }
+  }
+
+  public secondRoundStart(data: any) {
+    return {
+      type: SECOND_ROUND_START,
+      payload: data
+    }
+  }
+
+  public thirdRoundStart(data: any) {
+    return {
+      type: THIRD_ROUND_START,
       payload: data
     }
   }

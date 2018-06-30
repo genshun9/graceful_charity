@@ -48,14 +48,20 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       return firstRoundStartState;
 
     case SECOND_ROUND_START:
-      return Object.assign({}, state, {
-        gameProgress: GAME_PROGRESS.SECOND_ROUND
-      });
+      const secondRoundStartState = Object.assign({}, state, {
+      gameProgress: GAME_PROGRESS.SECOND_ROUND,
+      connecting: false,
+      players: action.payload.value.map(p => Player.create(p))
+    });
+      return secondRoundStartState;
 
     case THIRD_ROUND_START:
-      return Object.assign({}, state, {
-        gameProgress: GAME_PROGRESS.THIRD_ROUND
+      const thirdRoundStartState = Object.assign({}, state, {
+        gameProgress: GAME_PROGRESS.THIRD_ROUND,
+        connecting: false,
+        players: action.payload.value.map(p => Player.create(p))
       });
+      return thirdRoundStartState;
 
     case PICK_SUCCESS:
       // 本来はaction.payload.playerIDに合致するユーザのみconnectingをfalseにしたかった。

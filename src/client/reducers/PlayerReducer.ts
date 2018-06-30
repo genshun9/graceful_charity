@@ -1,5 +1,8 @@
 import Player from '../models/Player';
-import {DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SELECT_CARD} from "../constants/Constants";
+import {
+  DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SECOND_ROUND_START,
+  SELECT_CARD, THIRD_ROUND_START
+} from "../constants/Constants";
 
 export type NotSelect = "NotSelect";
 export type Selecting = string;
@@ -35,6 +38,18 @@ export const PlayerReducer = (state: PlayerState = initState, action) => {
         me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
       });
       return firstRoundStartState;
+
+    case SECOND_ROUND_START:
+      const secondRoundStartState = Object.assign({}, state, {
+        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+      });
+      return secondRoundStartState;
+
+    case THIRD_ROUND_START:
+      const thirdRoundStartState = Object.assign({}, state, {
+        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+      });
+      return thirdRoundStartState;
 
     case SELECT_CARD:
       const selectCardState = Object.assign({}, state, {

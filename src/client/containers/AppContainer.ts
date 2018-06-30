@@ -17,7 +17,9 @@ export interface AppProps {
   players: Player[],
   loginSuccess: (data: any) => {},
   firstRoundStart: (data: any) => {},
-  pickSuccess: (data:any) => {}
+  secondRoundStart: (data: any) => {},
+  thirdRoundStart: (data: any) => {},
+  pickSuccess: (data:any) => {},
   draft: (data: any) => {}
 }
 
@@ -34,6 +36,8 @@ const mapDispatchToProps = dispatch => {
   return {
     loginSuccess: data => dispatch(ApplicationActionCreator.loginSuccess(data)),
     firstRoundStart: data => dispatch(ApplicationActionCreator.firstRoundStart(data)),
+    secondRoundStart: data => dispatch(ApplicationActionCreator.secondRoundStart(data)),
+    thirdRoundStart: data => dispatch(ApplicationActionCreator.thirdRoundStart(data)),
     pickSuccess: data => dispatch(ApplicationActionCreator.pickSuccess(data)),
     draft: data => dispatch(ApplicationActionCreator.draft(data))
   }

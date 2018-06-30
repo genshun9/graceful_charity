@@ -13,6 +13,7 @@ export interface DraftProps {
   selectingCardID: SelectState;
   players: Player[];
   selectedCardID: string;
+  gameProgress: number;
   onClickCard: (cardID: string) => {};
   onClickPick: (props: { card: Card, playerID: number }) => {};
 }
@@ -24,7 +25,8 @@ const mapStateToProps = state => {
     me: state.PlayerReducer.me,
     selectingCardID: state.PlayerReducer.selectingCardID,
     players: state.ApplicationReducer.players,
-    selectedCardID: state.PlayerReducer.selectedCardID
+    selectedCardID: state.PlayerReducer.selectedCardID,
+    gameProgress: state.ApplicationReducer.gameProgress
   }
 };
 

@@ -2,7 +2,10 @@ import * as React from 'react';
 import WithLifecycleComponent from './WithLifecycleComponent';
 import {AppProps, Socket} from "../containers/AppContainer";
 import LoginContainer from "../containers/LoginContainer";
-import {DRAFT, FIRST_ROUND_START, GAME_PROGRESS, LOGIN_SUCCESS, PICK_SUCCESS} from "../constants/Constants";
+import {
+  DRAFT, FIRST_ROUND_START, GAME_PROGRESS, LOGIN_SUCCESS, PICK_SUCCESS,
+  SECOND_ROUND_START, THIRD_ROUND_START
+} from "../constants/Constants";
 import DraftContainer from "../containers/DraftContainer";
 
 const AppComponentSFC: React.SFC<AppProps> = props => {
@@ -33,6 +36,8 @@ const AppComponent = WithLifecycleComponent<AppProps>(
       socket.on('publish', (data: any) => {});
       socket.on(LOGIN_SUCCESS, (data: any) => props.loginSuccess(data));
       socket.on(FIRST_ROUND_START, (data: any) => props.firstRoundStart(data));
+      socket.on(SECOND_ROUND_START, (data: any) => props.secondRoundStart(data));
+      socket.on(THIRD_ROUND_START, (data: any) => props.thirdRoundStart(data));
       socket.on(PICK_SUCCESS, (data: any) => props.pickSuccess(data));
       socket.on(DRAFT, (data: any) => props.draft(data));
     }

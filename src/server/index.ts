@@ -177,22 +177,79 @@ io.sockets.on('connection', (socket) => {
     }
 
     // FIRST_ROUNDで、全員がピック完了し、21巡したら、SECOND_ROUNDを開始する
-    if (round === ROUND.FIRST && pickedUserCount === PLAYER_MAX_NUMBER && rotationCount === ROTATION_MAX_NUMBER) {
-      pickedUserCount = 0;
+    if (round === ROUND.FIRST && rotationCount === ROTATION_MAX_NUMBER) {
       rotationCount = 0;
       round = ROUND.SECOND;
-      // TODO 21枚をhandCardListにセットする
+      // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
+      playerCache.forEach(p => {
+        let handCardList: Card[] = [];
+        // レアカード2枚
+        handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+        handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+        // モンスター10枚
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 10]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 11]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 12]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 13]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 14]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 15]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 16]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 17]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 18]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 19]);
+        // 魔法3枚
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+        // 罠3枚
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+        // Ex3枚
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+        p.draft(HandCardList.create(handCardList));
+      });
       io.sockets.emit('SECOND_ROUND_START', {value: playerCache});
     }
 
     // SECOND_ROUNDで、全員がピック完了し、21巡したら、THIRD_ROUNDを開始する
-    if (round === ROUND.SECOND && pickedUserCount === PLAYER_MAX_NUMBER && rotationCount === ROTATION_MAX_NUMBER) {
-      pickedUserCount = 0;
+    if (round === ROUND.SECOND && rotationCount === ROTATION_MAX_NUMBER) {
       rotationCount = 0;
-      round = ROUND.SECOND;
-      // TODO 21枚をhandCardListにセットする
+      round = ROUND.THIRD;
+      // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
+      playerCache.forEach(p => {
+        let handCardList: Card[] = [];
+        // レアカード2枚
+        handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+        handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+        // モンスター10枚
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 20]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 21]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 22]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 23]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 24]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 25]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 26]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 27]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 28]);
+        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 29]);
+        // 魔法3枚
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+        // 罠3枚
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+        // Ex3枚
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+        p.draft(HandCardList.create(handCardList));
+      });
       io.sockets.emit('THIRD_ROUND_START', {value: playerCache});
-
     }
 
     // THIRD_ROUNDで、全員がピック完了し、21巡したら、ピック終了となる

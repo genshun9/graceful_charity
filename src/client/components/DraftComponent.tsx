@@ -2,6 +2,7 @@ import * as React from "react";
 import {DraftProps} from "../containers/DraftContainer";
 import CardComponent from "./CardComponent";
 import {Button, OverlayTrigger, Popover} from 'react-bootstrap'
+import {GAME_PROGRESS} from "../constants/Constants";
 
 const DraftComponent: React.SFC<DraftProps> = props => {
   const pickButton = (
@@ -39,7 +40,7 @@ const DraftComponent: React.SFC<DraftProps> = props => {
   const playerElm = (
     <div>
       {props.players.map(p => (
-        `${p.playerName} → `
+        (props.gameProgress === GAME_PROGRESS.SECOND_ROUND) ? `${p.playerName} ← ` : `${p.playerName} → `
       ))}
     </div>
   );

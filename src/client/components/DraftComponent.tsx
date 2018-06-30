@@ -1,10 +1,11 @@
 import * as React from "react";
 import {DraftProps} from "../containers/DraftContainer";
 import CardComponent from "./CardComponent";
+import {Popover} from 'react-bootstrap'
 
 const DraftComponent: React.SFC<DraftProps> = props => {
   const pickButton = (
-    <div>
+    <span>
       <button disabled={props.selectingCardID === "NotSelect" || props.selectingCardID === "Picked"}
               onClick={() => {
                 const pickCard = props.me.handCardList.find(h => h.cardID === props.selectingCardID);
@@ -12,7 +13,15 @@ const DraftComponent: React.SFC<DraftProps> = props => {
               }}>
         ピックする
       </button>
-    </div>
+    </span>
+  );
+
+  const showDeckButton = (
+    <span>
+      <Popover id="popover-trigger-click-root-close" title="デッキレシピ">
+        <strong>Holy guacamole!</strong>
+      </Popover>
+    </span>
   );
 
   const playerElm = (
@@ -26,6 +35,7 @@ const DraftComponent: React.SFC<DraftProps> = props => {
   return (
     <div>
       {pickButton}
+      {showDeckButton}
       {props.me.handCardList.map((c, i) => (
           <span key={`card-${i}`}>
               {i % 7 === 0 ? <p/> : null}

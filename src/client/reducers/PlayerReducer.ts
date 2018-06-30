@@ -1,6 +1,6 @@
 import Player from '../models/Player';
 import {
-  DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SECOND_ROUND_START,
+  DRAFT, END, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SECOND_ROUND_START,
   SELECT_CARD, THIRD_ROUND_START
 } from "../constants/Constants";
 
@@ -50,6 +50,12 @@ export const PlayerReducer = (state: PlayerState = initState, action) => {
         me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
       });
       return thirdRoundStartState;
+
+    case END:
+      const lastState = Object.assign({}, state, {
+        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+      });
+      return lastState;
 
     case SELECT_CARD:
       const selectCardState = Object.assign({}, state, {

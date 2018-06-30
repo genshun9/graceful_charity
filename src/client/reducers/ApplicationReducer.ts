@@ -1,6 +1,6 @@
 import {
   CHANGE_PLAYER_NAME, GAME_PROGRESS, FIRST_ROUND_START, LOGIN_SUCCESS, SEND_PLAYER_NAME, SECOND_ROUND_START,
-  THIRD_ROUND_START, PICK_SUCCESS, DRAFT
+  THIRD_ROUND_START, PICK_SUCCESS, DRAFT, END
 } from "../constants/Constants";
 import Player from "../models/Player";
 
@@ -62,6 +62,14 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
         players: action.payload.value.map(p => Player.create(p))
       });
       return thirdRoundStartState;
+
+    case END:
+      const lastState = Object.assign({}, state, {
+        gameProgress: GAME_PROGRESS.END,
+        connecting: false,
+        players: action.payload.value.map(p => Player.create(p))
+      });
+      return lastState;
 
     case PICK_SUCCESS:
       // 本来はaction.payload.playerIDに合致するユーザのみconnectingをfalseにしたかった。

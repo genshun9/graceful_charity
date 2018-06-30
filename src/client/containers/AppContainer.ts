@@ -19,6 +19,7 @@ export interface AppProps {
   firstRoundStart: (data: any) => {},
   secondRoundStart: (data: any) => {},
   thirdRoundStart: (data: any) => {},
+  draftEnd: (data: any) => {},
   pickSuccess: (data:any) => {},
   draft: (data: any) => {}
 }
@@ -38,6 +39,7 @@ const mapDispatchToProps = dispatch => {
     firstRoundStart: data => dispatch(ApplicationActionCreator.firstRoundStart(data)),
     secondRoundStart: data => dispatch(ApplicationActionCreator.secondRoundStart(data)),
     thirdRoundStart: data => dispatch(ApplicationActionCreator.thirdRoundStart(data)),
+    draftEnd: data => dispatch(ApplicationActionCreator.draftEnd(data)),
     pickSuccess: data => dispatch(ApplicationActionCreator.pickSuccess(data)),
     draft: data => dispatch(ApplicationActionCreator.draft(data))
   }

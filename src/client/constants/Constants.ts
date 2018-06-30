@@ -5,7 +5,8 @@ export const GAME_PROGRESS = {
   LOGIN: 2,
   FIRST_ROUND: 3,
   SECOND_ROUND: 4,
-  THIRD_ROUND: 5
+  THIRD_ROUND: 5,
+  END: 6
 };
 
 export const CHANGE_PLAYER_NAME:string = 'CHANGE_PLAYER_NAME';
@@ -20,5 +21,6 @@ export const LOGIN_SUCCESS:string = 'LOGIN_SUCCESS';
 export const FIRST_ROUND_START:string = 'FIRST_ROUND_START';
 export const SECOND_ROUND_START:string = 'SECOND_ROUND_START';
 export const THIRD_ROUND_START:string = 'THIRD_ROUND_START';
+export const END:string = 'END';
 export const PICK_SUCCESS:string = 'PICK_SUCCESS';
 export const DRAFT:string = 'DRAFT';

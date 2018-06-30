@@ -253,8 +253,7 @@ io.sockets.on('connection', (socket) => {
     }
 
     // THIRD_ROUNDで、全員がピック完了し、21巡したら、ピック終了となる
-    if (round === ROUND.THIRD && pickedUserCount === PLAYER_MAX_NUMBER && rotationCount === ROTATION_MAX_NUMBER) {
-      pickedUserCount = 0;
+    if (round === ROUND.THIRD && rotationCount === ROTATION_MAX_NUMBER) {
       rotationCount = 0;
       round = ROUND.END;
       io.sockets.emit('END', {value: playerCache});

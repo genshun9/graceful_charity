@@ -1,5 +1,5 @@
 import {
-  CHANGE_PLAYER_NAME, DRAFT, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS, SECOND_ROUND_START,
+  CHANGE_PLAYER_NAME, DRAFT, END, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS, SECOND_ROUND_START,
   SEND_PLAYER_NAME, THIRD_ROUND_START
 } from "../constants/Constants";
 
@@ -45,6 +45,13 @@ class ApplicationActionCreator {
   public thirdRoundStart(data: any) {
     return {
       type: THIRD_ROUND_START,
+      payload: data
+    }
+  }
+
+  public draftEnd(data: any) {
+    return {
+      type: END,
       payload: data
     }
   }

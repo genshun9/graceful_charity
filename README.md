@@ -9,15 +9,66 @@
 自分のデッキからカードを３枚ドローし、その後手札を２枚選択して捨てる。
 ```
 
+## 使い方
+- 開発時
+```
+クライアント側のコンパイル(parcelによる常時コンパイル)
+npm run client-compile
+
+サーバ側のコンパイル及びサーバ起動
+npm run server-compile
+```
+
+## 設計思想
+- client
+    - typescript/react/react-redux。ビルドはparcelを使う。
+    - model/reducer/actionは、PlayerとApplicationの2つを実装。
+        - Playerは、プレイヤー自身による操作、プレイヤーに関する情報を保持する。
+        - Applicationは、websocketによるviewの状態や、プレイヤー全員の情報を保持する。
+        - ところが、PlayerやApplicationどっち？という状態もあって、この分け方は微妙な気がする。
+    - viewについては、container/componentを使った。
+        - containerを使う使わないのジャッジは、dispatchの有無で判断してみた、stateを渡すだけのcomponentはcontainerは用意しないようにした。
+    - websocketについて
+        - AppContainerという最上流のcontainerで、最初の接続をする。
+        - AppComponentのComponentWillMountの時点で、いろいろな購読をする。
+        - websocketは状態ではないので、reducerには持たせず。親containerから徐々に渡してく方式にした。
+        - react-reduxとsocket.ioは[こちら](https://github.com/raineroviir/react-redux-socketio-chat)を参考にした。
+- server
+    - typescript/express/http。ビルドはtscを使う。
+    - modelのみ実装。websocketのメソッド毎に、controllerで分けたい。
+
 ## 課題
+### elmの断念について
 - elmとsocket.ioの相性が悪く、★が最も多い[socketioライブラリ](mgold/elm-socketio)がelm-langのv0.18に対応していないので、elmをやめる。
-- react/react-redux/redux周りのライブラリを最新で動かすと動かないので、半年分バージョンを下げてみた。
-- react/reduxとsocket.ioは[こちら](https://github.com/raineroviir/react-redux-socketio-chat)を参考にした。
-- socketioがつながらなかったが[こちら](https://qiita.com/kanjishima/items/5342eca62e8d5de30ccb)を読んで解消した。expressではなく、httpサーバをlistenする必要があった。
-- 各actionとsocket-ioの繋ぎ込みが便利なので、reducer内で管理してみた。
-    - 結果的に、各containerのmapDispatchToPropsで、socket-ioとtextを引数にactionへ渡すボイラープレートが増えた。
-    - なので、コンポーネントの最上段で定義をし、そこから子コンポーネントへ流すように実装してみる。
+    - ここは、socker.ioとのやりとりはjs側で実装し、それよりあとをelmで実装する、というパターンを用いればelmで実装できた可能性はある。
+
+### react周りについて
+- react/react-redux/redux周りのライブラリを最新で動かすと動かないので、半年分バージョンを下げてみた（react: 0.14.7, react-dom: 0.14.7, react-redux: 4.4.0）。
+    - 結局、react-bootstrapを導入するに当たり、prop-typesでエラーが発生したので、最新まで上げた。
+
+### socket-io周りについて
+- socketioがつながらなかったが[こちら](https://qiita.com/kanjishima/items/5342eca62e8d5de30ccb)を読んで解消した。
+    - expressではなく、httpサーバをlistenする必要があった。
+- 各actionとsocket-ioの繋ぎ込みが便利なので、socker-ioをreducer内で管理しようとしてた。
+    - 各containerのmapDispatchToPropsで、socket-ioとtextを引数にactionへ渡すボイラープレートが増えた。
+    - 便利ではなかった話と、reducerは状態を表している部分なので、やめる。
+    - コンポーネントの最上段で定義をし、そこから子コンポーネントへ流すように実装した。
+- parcelで常時ビルドしているが、そうするとwebsocketの接続エラーが無限に発生してブラウザがstack-overflowになることが多々あった。
+    - なので、コード変更する際、ブラウザを消したり、serverを落としたり、作業効率悪かった。。
+
+### parcelについて
 - parcelで出力されるjsがランダムな名前なので、dist配下のjsを取得するように、<object>タグを使ってみた。
-    - その結果、スタイルが高さ156pxに固定されてしまったので、entry.jsの名前をべた書きしてみる。
-- component1つにつき、基本的にcontainer1つを用意する設計にした。
-    - 単純に面倒なのと、dispatchを渡すが、stateはreducerからではなく親のstateから渡したい場合の記述方法がわからない。
+    - その結果、謎ではあるが「スタイルが高さ156pxに固定されてしまう」現象が発生。
+    - entry.jsが、parcelから出力されるjs名をべた書きで参照することで、object対応せずに済ませた。
+- 実装を終えて、翌日コーディングする時、再度parcelで出力すると謎のエラー(react周り)がよく発生した。
+    - distや.cache配下のディレクトリを削除して再度ビルドし直すと治ったので、作業効率低下。
+- typescriptで実装しているが、parcelのコンパイル、結構ガバガバであった。 
+    - webpack.config.jsを必要としない魅力はあるが、上記の理由により、parcelはやめたほうが良さそう。
+
+## v1.0の開発アイテム
+- ブラウザ閉じると、一生戻らない問題の解消（localStorageに保持する）。
+- 今何巡目の何ピック目なのか、また、今ピック中なのか、ピック終わって待ってるのか、始まってるのか、状態がわかりづらい。
+- ログインに必要な入力項目が、名前なのかどうかがわからなかった。
+- レア枠は表示してほしい。
+- デッキレシピは、モンスター/魔法/罠に分けたい。あとピック履歴も巡毎に表示したい。
+- 6人ドラなら1列6枚カードのほうが良さそう。

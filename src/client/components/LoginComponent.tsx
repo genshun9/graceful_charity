@@ -4,10 +4,20 @@ import {LoginProps} from "../containers/LoginContainer";
 const LoginComponent: React.SFC<LoginProps> = props => {
   return (
     <div>
-      <input disabled={props.player !== null} value={props.inputPlayerName} onChange={e => props.onChangePlayerName(e.target.value)}/>
-      <button disabled={props.player !== null || props.inputPlayerName === ""} onClick={() => props.onClickSendPlayerName(props.inputPlayerName, props.randomID)}>送信</button>
+      <br/>
+      <span style={{paddingLeft: 20}}>
+      <input disabled={props.player !== null} value={props.inputPlayerName}
+             onChange={e => props.onChangePlayerName(e.target.value)}/>
+      </span>
+      <span style={{paddingLeft: 20}}>
+        <button disabled={props.player !== null || props.inputPlayerName === ""}
+                onClick={() => props.onClickSendPlayerName(props.inputPlayerName, props.randomID)}>送信</button>
+      </span>
       {props.players.map((p, i) => {
-        const style = (props.player === null || p.playerID !== props.player.playerID) ? {color: "black"} : {color: "red"};
+        const style = (props.player === null || p.playerID !== props.player.playerID) ? {
+          color: "black",
+          paddingLeft: 20
+        } : {color: "red", paddingLeft: 20};
         return (
           <div key={i} style={style}>{p.playerName}</div>
         )

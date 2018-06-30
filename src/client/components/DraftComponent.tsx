@@ -6,7 +6,7 @@ import {GAME_PROGRESS} from "../constants/Constants";
 
 const DraftComponent: React.SFC<DraftProps> = props => {
   const pickButton = (
-    <span>
+    <span style={{paddingLeft: 20, paddingRight: 20}}>
       <button disabled={props.selectingCardID === "NotSelect" || props.selectingCardID === "Picked"}
               onClick={() => {
                 const pickCard = props.me.handCardList.find(h => h.cardID === props.selectingCardID);
@@ -26,7 +26,7 @@ const DraftComponent: React.SFC<DraftProps> = props => {
   );
 
   const showDeckButton = (
-    <span>
+    <span style={{paddingLeft: 20}}>
       <OverlayTrigger
         trigger="click"
         rootClose
@@ -51,6 +51,7 @@ const DraftComponent: React.SFC<DraftProps> = props => {
 
   return (
     <div>
+      <br/>
       {pickButton}
       {showDeckButton}
       {props.me.handCardList.map((c, i) => (

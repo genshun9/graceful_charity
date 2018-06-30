@@ -22,7 +22,9 @@ const AppComponentSFC: React.SFC<AppProps> = props => {
       <DraftContainer/>
     )
   } else if (props.gameProgress === GAME_PROGRESS.END) {
+    return (
       <DeckListContainer/>
+    )
   } else {
     return (
       <div>予期せぬエラー</div>

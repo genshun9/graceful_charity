@@ -52,10 +52,10 @@ export const PlayerReducer = (state: PlayerState = initState, action) => {
       return thirdRoundStartState;
 
     case END:
-      const lastState = Object.assign({}, state, {
+      const lastPlayerState = Object.assign({}, state, {
         me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
       });
-      return lastState;
+      return lastPlayerState;
 
     case SELECT_CARD:
       const selectCardState = Object.assign({}, state, {

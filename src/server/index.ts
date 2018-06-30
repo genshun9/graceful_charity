@@ -204,21 +204,11 @@ io.sockets.on('connection', (socket) => {
     }
   });
 
-  // メッセージ送信イベント
-  socket.on('publish', (data: any) => {
-    console.log("publish", data);
-    io.sockets.emit('publish', data);
-  });
-
   // 接続終了イベント
   socket.on('disconnect', () => {
     console.log("disconnect");
     io.sockets.emit("publish", {});
   });
-
-  socket.on('send', (str) => {
-    console.log("send", str);
-  })
 });
 
 /**

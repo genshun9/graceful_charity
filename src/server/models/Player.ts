@@ -21,7 +21,7 @@ export default class Player extends AbstractPlayer {
   }
 
   // プレイヤーが手札からカードを1枚ピックする時
-  pick(props: { name: string, cardID: string, cardURL: string }): Player {
+  pick(props: { name: string, cardID: string, cardURL: string, cardType: number }): Player {
     // Immutableを使わないので破壊的メソッドを使う
     this.draftDeckList.push(Card.create(props));
     this.handCardList.picked(props.cardID);

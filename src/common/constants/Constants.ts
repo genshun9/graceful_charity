@@ -6,3 +6,10 @@ export const GAME_PROGRESS = {
   THIRD_ROUND: 5,
   END: 6
 };
+
+export const CARD_TYPE = {
+  MONSTER: 1,
+  MAGIC: 2,
+  TRAP: 3,
+  EXTRA: 4
+};

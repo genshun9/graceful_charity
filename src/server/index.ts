@@ -141,9 +141,10 @@ io.sockets.on('connection', (socket) => {
   });
 
   // ピック
+  // TODO: 一旦cardTypeはnullにする
   socket.on('PICK', (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => {
     playerCache.find(p => p.playerID === pickData.playerID)
-      .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL});
+      .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
     pickedUserCount++;
     io.sockets.emit('PICK_SUCCESS', {playerID: pickData.playerID});
 

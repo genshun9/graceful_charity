@@ -5,11 +5,14 @@ import * as socketIo from 'socket.io';
 import * as path from "path";
 import Player from './models/Player';
 import Card from "./models/Card"
-import {
-  PORT, PLAYER_MAX_NUMBER, rareCardList, monsterCardList, magicCardList, trapCardList,
-  extraCardList, ROTATION_MAX_NUMBER, ROUND
-} from "./constants";
+import {PORT, PLAYER_MAX_NUMBER, ROTATION_MAX_NUMBER} from "./serverApplicationConstants";
 import HandCardList from "./models/HandCard";
+import RareCardList from "../common/constants/RareCardList";
+import MonsterCardList from "../common/constants/MonsterCardList";
+import MagicCardList from "../common/constants/MagicCardList";
+import TrapCardList from "../common/constants/TrapCardList";
+import ExtraCardList from "../common/constants/ExtraCardList";
+import {GAME_PROGRESS} from "../common/constants/Constants";
 
 /**
  * express設定
@@ -37,7 +40,7 @@ app.get('/cache', (_, res) => {
     extraCardCache,
     pickedUserCount,
     rotationCount,
-    round
+    gameProgress
   };
 
   res.send(JSON.stringify(cache));
@@ -58,21 +61,21 @@ server.listen(PORT, () => {
  * キャッシュデータをまとめる
  */
 var playerCache: Player[] = [];
-var rareCardCache: Card[] = rareCardList.map(c => Card.create(c));
-var monsterCardCache: Card[] = monsterCardList.map(c => Card.create(c));
-var magicCardCache: Card[] = magicCardList.map(c => Card.create(c));
-var trapCardCache: Card[] = trapCardList.map(c => Card.create(c));
-var extraCardCache: Card[] = extraCardList.map(c => Card.create(c));
+var rareCardCache: Card[] = RareCardList.map(c => Card.create(c));
+var monsterCardCache: Card[] = MonsterCardList.map(c => Card.create(c));
+var magicCardCache: Card[] = MagicCardList.map(c => Card.create(c));
+var trapCardCache: Card[] = TrapCardList.map(c => Card.create(c));
+var extraCardCache: Card[] = ExtraCardList.map(c => Card.create(c));
 var pickedUserCount: number = 0;
 var rotationCount: number = 0;
-var round: number = ROUND.NO_START;
+var gameProgress: number = GAME_PROGRESS.NOT_LOGIN;
 
 /**
  * socket.io設定
  */
 io.sockets.on('connection', (socket) => {
   // ログイン
-  socket.on('LOGIN', (data:{text: string, randomID: string}) => {
+  socket.on('LOGIN', (data: { text: string, randomID: string }) => {
     const player: Player = Player.create({
       playerID: playerCache.length, //socket.id,
       playerName: data.text,
@@ -132,13 +135,13 @@ io.sockets.on('connection', (socket) => {
         handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
         p.draft(HandCardList.create(handCardList));
       });
-      round = ROUND.FIRST;
+      gameProgress = GAME_PROGRESS.FIRST_ROUND;
       io.sockets.emit('FIRST_ROUND_START', {value: playerCache});
     }
   });
 
   // ピック
-  socket.on('PICK', (pickData: { playerID: number, card: {name: string, cardID: string, cardURL: string }}) => {
+  socket.on('PICK', (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => {
     playerCache.find(p => p.playerID === pickData.playerID)
       .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL});
     pickedUserCount++;
@@ -150,10 +153,10 @@ io.sockets.on('connection', (socket) => {
       rotationCount++;
 
       // 1巡目と3巡目の場合は、インクリメントしたIDのプレイヤーへカードを順次渡していく
-      if (round === ROUND.FIRST || round === ROUND.THIRD) {
+      if (gameProgress === GAME_PROGRESS.FIRST_ROUND || gameProgress === GAME_PROGRESS.THIRD_ROUND) {
         const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
-        playerCache.forEach((p,i) => {
-          if (i  === 0) {
+        playerCache.forEach((p, i) => {
+          if (i === 0) {
             p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
           } else {
             p.draft(newHandCardList[p.playerID - 1])
@@ -163,10 +166,10 @@ io.sockets.on('connection', (socket) => {
       }
 
       // 2巡目の場合は、逆順にカードを順次渡していく
-      if (round === ROUND.SECOND) {
+      if (gameProgress === GAME_PROGRESS.SECOND_ROUND) {
         const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
-        playerCache.forEach((p,i) => {
-          if (i  === PLAYER_MAX_NUMBER - 1) {
+        playerCache.forEach((p, i) => {
+          if (i === PLAYER_MAX_NUMBER - 1) {
             p.draft(newHandCardList[0])
           } else {
             p.draft(newHandCardList[p.playerID + 1])
@@ -177,9 +180,9 @@ io.sockets.on('connection', (socket) => {
     }
 
     // FIRST_ROUNDで、全員がピック完了し、21巡したら、SECOND_ROUNDを開始する
-    if (round === ROUND.FIRST && rotationCount === ROTATION_MAX_NUMBER) {
+    if (gameProgress === GAME_PROGRESS.FIRST_ROUND && rotationCount === ROTATION_MAX_NUMBER) {
       rotationCount = 0;
-      round = ROUND.SECOND;
+      gameProgress = GAME_PROGRESS.SECOND_ROUND;
       // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
       playerCache.forEach(p => {
         let handCardList: Card[] = [];
@@ -215,9 +218,9 @@ io.sockets.on('connection', (socket) => {
     }
 
     // SECOND_ROUNDで、全員がピック完了し、21巡したら、THIRD_ROUNDを開始する
-    if (round === ROUND.SECOND && rotationCount === ROTATION_MAX_NUMBER) {
+    if (gameProgress === GAME_PROGRESS.SECOND_ROUND && rotationCount === ROTATION_MAX_NUMBER) {
       rotationCount = 0;
-      round = ROUND.THIRD;
+      gameProgress = GAME_PROGRESS.THIRD_ROUND;
       // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
       playerCache.forEach(p => {
         let handCardList: Card[] = [];
@@ -253,9 +256,9 @@ io.sockets.on('connection', (socket) => {
     }
 
     // THIRD_ROUNDで、全員がピック完了し、21巡したら、ピック終了となる
-    if (round === ROUND.THIRD && rotationCount === ROTATION_MAX_NUMBER) {
+    if (gameProgress === GAME_PROGRESS.THIRD_ROUND && rotationCount === ROTATION_MAX_NUMBER) {
       rotationCount = 0;
-      round = ROUND.END;
+      gameProgress = GAME_PROGRESS.END;
       io.sockets.emit('END', {value: playerCache});
     }
   });
@@ -270,11 +273,11 @@ io.sockets.on('connection', (socket) => {
 /**
  * 0から引数-1までの整数が、ランダムに格納された配列を返却するメソッド
  */
-const getRandomArray: (a: number) => number[] = (maxNumber:number) => {
+const getRandomArray: (a: number) => number[] = (maxNumber: number) => {
   //生成した乱数を格納する配列を初期化
-  let arr:number[] = [];
+  let arr: number[] = [];
   //生成した乱数を格納している配列の長さ（生成した乱数の数）
-  let arrLength:number = arr.length;
+  let arrLength: number = arr.length;
   //パラメータ maxNumber の数だけ Math.random()で乱数を発生
   for (let i = 0; i < maxNumber; i++) {
     let candidate = Math.floor(Math.random() * maxNumber);
@@ -294,7 +297,7 @@ const getRandomArray: (a: number) => number[] = (maxNumber:number) => {
 /**
  * 順序を変更したい配列と、変更したい順序(index)の配列を渡すと、配列の並びが変わるメソッド
  */
-const changeOrderArray: (a: any[], b:number[]) => any[] = (dataArray:any[], orderArray:number[]) => {
+const changeOrderArray: (a: any[], b: number[]) => any[] = (dataArray: any[], orderArray: number[]) => {
   let resultArray = [];
   orderArray.forEach(i => resultArray.push(dataArray[i]));
   return resultArray;

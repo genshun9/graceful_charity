@@ -13,6 +13,10 @@ import MagicCardList from "../common/constants/MagicCardList";
 import TrapCardList from "../common/constants/TrapCardList";
 import ExtraCardList from "../common/constants/ExtraCardList";
 import {GAME_PROGRESS} from "../common/constants/Constants";
+import {
+  CONNECTION, DISCONNECT, DRAFT, END, FIRST_ROUND_START, LOGIN, LOGIN_SUCCESS, PICK,
+  PICK_SUCCESS, SECOND_ROUND_START, THIRD_ROUND_START
+} from "../common/constants/SocketMessage";
 
 /**
  * express設定
@@ -73,9 +77,9 @@ var gameProgress: number = GAME_PROGRESS.NOT_LOGIN;
 /**
  * socket.io設定
  */
-io.sockets.on('connection', (socket) => {
+io.sockets.on(CONNECTION, (socket) => {
   // ログイン
-  socket.on('LOGIN', (data: { text: string, randomID: string }) => {
+  socket.on(LOGIN, (data: { text: string, randomID: string }) => {
     const player: Player = Player.create({
       playerID: playerCache.length, //socket.id,
       playerName: data.text,
@@ -83,7 +87,7 @@ io.sockets.on('connection', (socket) => {
       handCardList: []
     });
     playerCache.push(player);
-    io.sockets.emit('LOGIN_SUCCESS',
+    io.sockets.emit(LOGIN_SUCCESS,
         {value: {player, players: playerCache, randomID: data.randomID}, playerID: player.playerID});
 
     // プレイヤー数が6人になったら、ドラフト開始する
@@ -136,17 +140,17 @@ io.sockets.on('connection', (socket) => {
         p.draft(HandCardList.create(handCardList));
       });
       gameProgress = GAME_PROGRESS.FIRST_ROUND;
-      io.sockets.emit('FIRST_ROUND_START', {value: playerCache});
+      io.sockets.emit(FIRST_ROUND_START, {value: playerCache});
     }
   });
 
   // ピック
   // TODO: 一旦cardTypeはnullにする
-  socket.on('PICK', (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => {
+  socket.on(PICK, (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => {
     playerCache.find(p => p.playerID === pickData.playerID)
       .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
     pickedUserCount++;
-    io.sockets.emit('PICK_SUCCESS', {playerID: pickData.playerID});
+    io.sockets.emit(PICK_SUCCESS, {playerID: pickData.playerID});
 
     // 全員がピック完了したら、ドラフトをする
     if (pickedUserCount === PLAYER_MAX_NUMBER && rotationCount !== ROTATION_MAX_NUMBER) {
@@ -163,7 +167,7 @@ io.sockets.on('connection', (socket) => {
             p.draft(newHandCardList[p.playerID - 1])
           }
         });
-        io.sockets.emit('DRAFT', {value: playerCache});
+        io.sockets.emit(DRAFT, {value: playerCache});
       }
 
       // 2巡目の場合は、逆順にカードを順次渡していく
@@ -176,7 +180,7 @@ io.sockets.on('connection', (socket) => {
             p.draft(newHandCardList[p.playerID + 1])
           }
         });
-        io.sockets.emit('DRAFT', {value: playerCache});
+        io.sockets.emit(DRAFT, {value: playerCache});
       }
     }
 
@@ -215,7 +219,7 @@ io.sockets.on('connection', (socket) => {
         handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
         p.draft(HandCardList.create(handCardList));
       });
-      io.sockets.emit('SECOND_ROUND_START', {value: playerCache});
+      io.sockets.emit(SECOND_ROUND_START, {value: playerCache});
     }
 
     // SECOND_ROUNDで、全員がピック完了し、21巡したら、THIRD_ROUNDを開始する
@@ -253,19 +257,19 @@ io.sockets.on('connection', (socket) => {
         handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
         p.draft(HandCardList.create(handCardList));
       });
-      io.sockets.emit('THIRD_ROUND_START', {value: playerCache});
+      io.sockets.emit(THIRD_ROUND_START, {value: playerCache});
     }
 
     // THIRD_ROUNDで、全員がピック完了し、21巡したら、ピック終了となる
     if (gameProgress === GAME_PROGRESS.THIRD_ROUND && rotationCount === ROTATION_MAX_NUMBER) {
       rotationCount = 0;
       gameProgress = GAME_PROGRESS.END;
-      io.sockets.emit('END', {value: playerCache});
+      io.sockets.emit(END, {value: playerCache});
     }
   });
 
   // 接続終了イベント
-  socket.on('disconnect', () => {
+  socket.on(DISCONNECT, () => {
     console.log("disconnect");
     io.sockets.emit("publish", {});
   });

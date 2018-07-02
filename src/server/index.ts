@@ -12,7 +12,7 @@ import MonsterCardList from "../common/constants/MonsterCardList";
 import MagicCardList from "../common/constants/MagicCardList";
 import TrapCardList from "../common/constants/TrapCardList";
 import ExtraCardList from "../common/constants/ExtraCardList";
-import {GAME_PROGRESS} from "../common/constants/Constants";
+import {GAME_PROGRESS} from "../common/constants/Enums";
 import {
   CONNECTION, DISCONNECT, DRAFT, END, FIRST_ROUND_START, LOGIN, LOGIN_SUCCESS, PICK,
   PICK_SUCCESS, SECOND_ROUND_START, THIRD_ROUND_START

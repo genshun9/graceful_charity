@@ -1,4 +1,4 @@
-import {CARD_TYPE} from "./Constants";
+import {CARD_TYPE} from "./Enums";
 
 const TrapCardList: { name: string, cardURL: string, cardID: string, cardType: number}[] =
   [

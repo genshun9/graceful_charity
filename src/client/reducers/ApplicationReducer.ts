@@ -1,8 +1,9 @@
 import {
-  CHANGE_PLAYER_NAME, GAME_PROGRESS, FIRST_ROUND_START, LOGIN_SUCCESS, SEND_PLAYER_NAME, SECOND_ROUND_START,
+  CHANGE_PLAYER_NAME, FIRST_ROUND_START, LOGIN_SUCCESS, SEND_PLAYER_NAME, SECOND_ROUND_START,
   THIRD_ROUND_START, PICK_SUCCESS, DRAFT, END
 } from "../constants/Constants";
 import Player from "../models/Player";
+import {GAME_PROGRESS} from "../../common/constants/Enums";
 
 interface ApplicationState {
   inputPlayerName: string;

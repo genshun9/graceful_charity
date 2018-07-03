@@ -1,13 +1,13 @@
 export const PUBLIC_IP = 'localhost';
 
-export const GAME_PROGRESS = {
-  NOT_LOGIN: 1,
-  LOGIN: 2,
-  FIRST_ROUND: 3,
-  SECOND_ROUND: 4,
-  THIRD_ROUND: 5,
-  END: 6
-};
+// export const GAME_PROGRESS = {
+//   NOT_LOGIN: 1,
+//   LOGIN: 2,
+//   FIRST_ROUND: 3,
+//   SECOND_ROUND: 4,
+//   THIRD_ROUND: 5,
+//   END: 6
+// };
 
 export const CHANGE_PLAYER_NAME:string = 'CHANGE_PLAYER_NAME';
 export const SEND_PLAYER_NAME:string = 'SEND_PLAYER_NAME';

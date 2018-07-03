@@ -2,7 +2,7 @@ import * as React from "react";
 import {DraftProps} from "../containers/DraftContainer";
 import CardComponent from "./CardComponent";
 import {Button, OverlayTrigger, Popover} from 'react-bootstrap'
-import {GAME_PROGRESS} from "../constants/Constants";
+import {GAME_PROGRESS} from "../../common/constants/Enums";
 
 const DraftComponent: React.SFC<DraftProps> = props => {
   const pickButton = (

@@ -3,6 +3,7 @@ import Player from "../models/Player";
 import LoginComponent from "../components/LoginComponent";
 import {socket} from "./AppContainer";
 import ApplicationActionCreator from "../actions/ApplicationActionCreator";
+import {LOGIN} from "../../common/constants/SocketMessage";
 
 export interface LoginProps {
   inputPlayerName: string,
@@ -26,7 +27,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onChangePlayerName: text => dispatch(ApplicationActionCreator.changePlayerName(text)),
     onClickSendPlayerName: (text, randomID) => {
-      socket.emit("LOGIN", {text, randomID});
+      socket.emit(LOGIN, {text, randomID});
       dispatch(ApplicationActionCreator.sendPlayerName(text))
     }
   }

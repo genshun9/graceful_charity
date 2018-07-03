@@ -71,6 +71,82 @@ class PlayerStore extends AbstractDataStore <Player[]>{
     });
   }
 
+  startSecondRound():void {
+    this.getCache().forEach(p => {
+      const rareCardCache = RareCardStore.getCache();
+      const monsterCardCache = MonsterCardStore.getCache();
+      const magicCardCache = MagicCardStore.getCache();
+      const trapCardCache = TrapCardStore.getCache();
+      const extraCardCache = ExtraCardStore.getCache();
+      let handCardList: Card[] = [];
+      // レアカード2枚
+      handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+      handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+      // モンスター10枚
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 10]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 11]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 12]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 13]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 14]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 15]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 16]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 17]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 18]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 19]);
+      // 魔法3枚
+      handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+      handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+      handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+      // 罠3枚
+      handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+      handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+      handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+      // Ex3枚
+      handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+      handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+      handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+      p.draft(HandCardList.create(handCardList));
+    });
+  }
+
+  startThirdRound():void {
+    this.getCache().forEach(p => {
+      const rareCardCache = RareCardStore.getCache();
+      const monsterCardCache = MonsterCardStore.getCache();
+      const magicCardCache = MagicCardStore.getCache();
+      const trapCardCache = TrapCardStore.getCache();
+      const extraCardCache = ExtraCardStore.getCache();
+      let handCardList: Card[] = [];
+      // レアカード2枚
+      handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+      handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+      // モンスター10枚
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 20]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 21]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 22]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 23]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 24]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 25]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 26]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 27]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 28]);
+      handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 29]);
+      // 魔法3枚
+      handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+      handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+      handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+      // 罠3枚
+      handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+      handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+      handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+      // Ex3枚
+      handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+      handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+      handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+      p.draft(HandCardList.create(handCardList));
+    });
+  }
+
   // ドラフト時に実行、引数がtrueなら時計回りにdraftする
   draft(isClockWise:boolean):void {
     if (isClockWise) {

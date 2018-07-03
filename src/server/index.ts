@@ -17,6 +17,7 @@ import {
   CONNECTION, DISCONNECT, DRAFT, END, FIRST_ROUND_START, LOGIN, LOGIN_SUCCESS, PICK,
   PICK_SUCCESS, SECOND_ROUND_START, THIRD_ROUND_START
 } from "../common/constants/SocketMessage";
+import PlayerStore from "./dataStores/PlayerStore";
 
 /**
  * express設定
@@ -36,6 +37,7 @@ app.use(bodyParser.urlencoded({extended: true}));
  */
 app.get('/cache', (_, res) => {
   const cache = {
+    PlayerStore: PlayerStore.getCache(),
     playerCache,
     rareCardCache,
     monsterCardCache,
@@ -65,6 +67,7 @@ server.listen(PORT, () => {
  * キャッシュデータをまとめる
  */
 var playerCache: Player[] = [];
+PlayerStore.init();
 var rareCardCache: Card[] = RareCardList.map(c => Card.create(c));
 var monsterCardCache: Card[] = MonsterCardList.map(c => Card.create(c));
 var magicCardCache: Card[] = MagicCardList.map(c => Card.create(c));
@@ -87,11 +90,12 @@ io.sockets.on(CONNECTION, (socket) => {
       handCardList: []
     });
     playerCache.push(player);
+    PlayerStore.create(player);
     io.sockets.emit(LOGIN_SUCCESS,
         {value: {player, players: playerCache, randomID: data.randomID}, playerID: player.playerID});
 
     // プレイヤー数が6人になったら、ドラフト開始する
-    if (playerCache.length === PLAYER_MAX_NUMBER) {
+    if (PlayerStore.isMaxPlayer()) {
       // レアカードのランダマイズ
       const randomOrderForRareCard = getRandomArray(rareCardCache.length);
       rareCardCache = changeOrderArray(rareCardCache, randomOrderForRareCard);

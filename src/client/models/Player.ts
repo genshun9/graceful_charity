@@ -1,14 +1,12 @@
 import Card from "./Card";
+import AbstractPlayer from "../../common/models/AbstractPlayer";
 
-export default class Player {
-  readonly playerID: number;
-  readonly playerName: string;
+export default class Player extends AbstractPlayer {
   draftDeckList: Card[];
   handCardList: Card[];
 
   constructor(props: { playerID: number, playerName: string, draftDeckList: Card[], handCardList: Card[]}) {
-    this.playerID = props.playerID;
-    this.playerName = props.playerName;
+    super(props);
     this.draftDeckList = props.draftDeckList;
     this.handCardList = props.handCardList;
   }

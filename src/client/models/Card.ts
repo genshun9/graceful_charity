@@ -1,15 +1,7 @@
-export default class Card {
-  readonly name: string;
-  readonly cardID: string;
-  readonly cardURL: string;
+import AbstractCard from "../../common/models/AbstractCard";
 
-  constructor(props: { name: string, cardID: string, cardURL: string }) {
-    this.name = props.name;
-    this.cardID = props.cardID;
-    this.cardURL = props.cardURL;
-  }
-
-  static create(props: { name: string, cardID: string, cardURL: string }) {
+export default class Card extends AbstractCard {
+  static create(props: { name: string, cardID: string, cardURL: string, cardType: number }) {
     return new Card(props);
   }
 }

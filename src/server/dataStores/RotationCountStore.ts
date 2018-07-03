@@ -20,10 +20,6 @@ class RotationCountStore extends AbstractDataStore<number> {
     this.cache++;
   }
 
-  startFirstRound():void {
-
-  }
-
   startSecondRound():void {
     this.cache = 0;
   }

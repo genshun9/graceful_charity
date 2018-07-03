@@ -1,7 +1,7 @@
 import Card from "../models/Card";
 import AbstractDataStore from "./AbstractDataStore";
 import TrapCardList from "../../common/constants/TrapCardList";
-import {changeOrderArray, getRandomArray} from "../index";
+import {changeOrderArray, getRandomArray} from "../utils";
 
 class TrapCardStore extends AbstractDataStore <Card[]>{
   // サーバ起動時に実行

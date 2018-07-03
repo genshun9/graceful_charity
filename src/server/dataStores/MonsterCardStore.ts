@@ -1,7 +1,7 @@
 import Card from "../models/Card";
 import AbstractDataStore from "./AbstractDataStore";
 import MonsterCardList from "../../common/constants/MonsterCardList";
-import {changeOrderArray, getRandomArray} from "../index";
+import {changeOrderArray, getRandomArray} from "../utils";
 
 class MonsterCardStore extends AbstractDataStore <Card[]>{
   // サーバ起動時に実行

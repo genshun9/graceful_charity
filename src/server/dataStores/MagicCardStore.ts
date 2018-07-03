@@ -1,7 +1,7 @@
 import Card from "../models/Card";
 import AbstractDataStore from "./AbstractDataStore";
 import MagicCardList from "../../common/constants/MagicCardList";
-import {changeOrderArray, getRandomArray} from "../index";
+import {changeOrderArray, getRandomArray} from "../utils";
 
 class MagicCardStore extends AbstractDataStore <Card[]>{
   // サーバ起動時に実行

@@ -5,9 +5,8 @@ import {GAME_PROGRESS} from "../../common/constants/Enums";
 import PickedUserCountStore from "../dataStores/PickedUserCountStore";
 import RotationCountStore from "../dataStores/RotationCountStore";
 
-
 class PickController {
-  pick(pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }, io): void {
+  pick(pickData, io): void {
     PlayerStore.pick(pickData);
     PickedUserCountStore.pick();
     io.sockets.emit(PICK_SUCCESS, {playerID: pickData.playerID});

@@ -2,7 +2,9 @@
 export interface SocketIO {
   player?: PlayerIO,
   players?: PlayerIO[],
-  playerID?: string,
+  playerID?: number,
+  card?: CardIO,
+  text?: string,
   randomID?: string
 }
 

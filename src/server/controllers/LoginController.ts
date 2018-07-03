@@ -9,7 +9,7 @@ import {FIRST_ROUND_START, LOGIN_SUCCESS} from "../../common/constants/SocketMes
 import ExtraCardStore from "../dataStores/ExtraCardStore";
 
 class LoginController {
-  login(data: { text: string, randomID: string }, io): void {
+  login(data, io): void {
     const player: Player = Player.create({
       playerID: PlayerStore.getCache().length,
       playerName: data.text,

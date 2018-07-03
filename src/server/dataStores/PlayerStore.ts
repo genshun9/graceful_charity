@@ -26,7 +26,7 @@ class PlayerStore extends AbstractDataStore <Player[]>{
   }
 
   // プレイヤーがカードをpickした時に実行
-  pick(pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string }} ):void {
+  pick(pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string, cardType: number }} ):void {
     this.getCache().find(p => p.playerID === pickData.playerID)
       .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
   }

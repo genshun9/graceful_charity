@@ -16,6 +16,8 @@ import RotationCountStore from "./dataStores/RotationCountStore";
 import GameProgressStore from "./dataStores/GameProgressStore";
 import LoginController from "./controllers/LoginController";
 import PickController from "./controllers/PickController";
+import {SocketIO} from "../common/types";
+import {convertSocketIO2Pick, convertSoketIO2Login} from "./types";
 
 /**
  * express設定
@@ -77,13 +79,7 @@ GameProgressStore.init();
  * socket.io設定
  */
 io.sockets.on(CONNECTION, (socket) => {
-  // ログイン
-  socket.on(LOGIN, (data: { text: string, randomID: string }) => LoginController.login(data, io));
-
-  // ピック
-  // TODO: 一旦cardTypeはnullにする
-  socket.on(PICK, (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => PickController.pick(pickData, io));
-
-  // 接続終了イベント
+  socket.on(LOGIN, (data: SocketIO) => LoginController.login(convertSoketIO2Login(data), io));
+  socket.on(PICK, (data: SocketIO) => PickController.pick(convertSocketIO2Pick(data), io));
   socket.on(DISCONNECT, () => console.log("disconnect"));
 });

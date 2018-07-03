@@ -4,14 +4,7 @@ import * as http from 'http';
 import * as socketIo from 'socket.io';
 import * as path from "path";
 import Player from './models/Player';
-import Card from "./models/Card"
-import {PORT, PLAYER_MAX_NUMBER, ROTATION_MAX_NUMBER} from "./serverApplicationConstants";
-import HandCardList from "./models/HandCard";
-import RareCardList from "../common/constants/RareCardList";
-import MonsterCardList from "../common/constants/MonsterCardList";
-import MagicCardList from "../common/constants/MagicCardList";
-import TrapCardList from "../common/constants/TrapCardList";
-import ExtraCardList from "../common/constants/ExtraCardList";
+import {PORT} from "./serverApplicationConstants";
 import {GAME_PROGRESS} from "../common/constants/Enums";
 import {
   CONNECTION, DISCONNECT, DRAFT, END, FIRST_ROUND_START, LOGIN, LOGIN_SUCCESS, PICK,
@@ -53,16 +46,7 @@ app.get('/cache', (_, res) => {
     ExtraCardStore: ExtraCardStore.getCache(),
     PickedUserCountStore: PickedUserCountStore.getCache(),
     RotationCountStore: RotationCountStore.getCache(),
-    GameProgressStore: GameProgressStore.getCache(),
-    // playerCache,
-    // rareCardCache,
-    // monsterCardCache,
-    // magicCardCache,
-    // trapCardCache,
-    // extraCardCache,
-    // pickedUserCount,
-    // rotationCount,
-    // gameProgress
+    GameProgressStore: GameProgressStore.getCache()
   };
 
   res.send(JSON.stringify(cache));
@@ -80,17 +64,8 @@ server.listen(PORT, () => {
 });
 
 /**
- * キャッシュデータをまとめる
+ * サーバ起動時にキャッシュデータを初期化
  */
-// var playerCache: Player[] = [];
-// var rareCardCache: Card[] = RareCardList.map(c => Card.create(c));
-// var monsterCardCache: Card[] = MonsterCardList.map(c => Card.create(c));
-// var magicCardCache: Card[] = MagicCardList.map(c => Card.create(c));
-// var trapCardCache: Card[] = TrapCardList.map(c => Card.create(c));
-// var extraCardCache: Card[] = ExtraCardList.map(c => Card.create(c));
-// var pickedUserCount: number = 0;
-// var rotationCount: number = 0;
-// var gameProgress: number = GAME_PROGRESS.NOT_LOGIN;
 PlayerStore.init();
 RareCardStore.init();
 MonsterCardStore.init();
@@ -108,12 +83,11 @@ io.sockets.on(CONNECTION, (socket) => {
   // ログイン
   socket.on(LOGIN, (data: { text: string, randomID: string }) => {
     const player: Player = Player.create({
-      playerID: PlayerStore.getCache().length, //socket.id,
+      playerID: PlayerStore.getCache().length,
       playerName: data.text,
       draftDeckList: [],
       handCardList: []
     });
-    // playerCache.push(player);
     PlayerStore.create(player);
     io.sockets.emit(LOGIN_SUCCESS,
         {value: {player, players: PlayerStore.getCache(), randomID: data.randomID}, playerID: player.playerID});
@@ -126,55 +100,9 @@ io.sockets.on(CONNECTION, (socket) => {
       MagicCardStore.randomize();
       TrapCardStore.randomize();
       ExtraCardStore.randomize();
-      // const randomOrderForRareCard = getRandomArray(rareCardCache.length);
-      // rareCardCache = changeOrderArray(rareCardCache, randomOrderForRareCard);
-      // // モンスターカードのランダマイズ
-      // const randomOrderForMonsterCard = getRandomArray(monsterCardCache.length);
-      // monsterCardCache = changeOrderArray(monsterCardCache, randomOrderForMonsterCard);
-      // // 魔法カードのランダマイズ
-      // const randomOrderForMagicCard = getRandomArray(magicCardCache.length);
-      // magicCardCache = changeOrderArray(magicCardCache, randomOrderForMagicCard);
-      // // 罠カードのランダマイズ
-      // const randomOrderForTrapCard = getRandomArray(trapCardCache.length);
-      // trapCardCache = changeOrderArray(trapCardCache, randomOrderForTrapCard);
-      // // Exカードのランダマイズ
-      // const randomOrderForExtraCard = getRandomArray(extraCardCache.length);
-      // extraCardCache = changeOrderArray(extraCardCache, randomOrderForExtraCard);
-
-      // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
-      // playerCache.forEach(p => {
-      //   let handCardList: Card[] = [];
-      //   // レアカード2枚
-      //   handCardList.push(rareCardCache[p.playerID]);
-      //   handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-      //   // モンスター10枚
-      //   handCardList.push(monsterCardCache[p.playerID]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 9]);
-      //   // 魔法3枚
-      //   handCardList.push(magicCardCache[p.playerID]);
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-      //   // 罠3枚
-      //   handCardList.push(trapCardCache[p.playerID]);
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-      //   // Ex3枚
-      //   handCardList.push(extraCardCache[p.playerID]);
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-      //   p.draft(HandCardList.create(handCardList));
-      // });
+      // 第1ラウンド開始
       PlayerStore.startFirstRound();
       GameProgressStore.startFirstRound();
-      // gameProgress = GAME_PROGRESS.FIRST_ROUND;
       io.sockets.emit(FIRST_ROUND_START, {value: PlayerStore.getCache()});
     }
   });
@@ -183,44 +111,23 @@ io.sockets.on(CONNECTION, (socket) => {
   // TODO: 一旦cardTypeはnullにする
   socket.on(PICK, (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => {
     PlayerStore.pick(pickData);
-    // playerCache.find(p => p.playerID === pickData.playerID)
-    //   .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
     PickedUserCountStore.pick();
-    // pickedUserCount++;
     io.sockets.emit(PICK_SUCCESS, {playerID: pickData.playerID});
 
     // 全員がピック完了したら、ドラフトをする
     if (PickedUserCountStore.isAllPlayerPick() && !RotationCountStore.isMaxRotatoin()) {
       PickedUserCountStore.draft();
       RotationCountStore.draft();
-      // pickedUserCount = 0;
-      // rotationCount++;
 
       // 1巡目と3巡目の場合は、インクリメントしたIDのプレイヤーへカードを順次渡していく
       if (GameProgressStore.isClockWise()) {
         PlayerStore.draft(true);
-        // const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
-        // playerCache.forEach((p, i) => {
-        //   if (i === 0) {
-        //     p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
-        //   } else {
-        //     p.draft(newHandCardList[p.playerID - 1])
-        //   }
-        // });
         io.sockets.emit(DRAFT, {value: PlayerStore.getCache()});
       }
 
       // 2巡目の場合は、逆順にカードを順次渡していく
       if (GameProgressStore.isCounterClockWise()) {
         PlayerStore.draft(false);
-        // const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
-        // playerCache.forEach((p, i) => {
-        //   if (i === PLAYER_MAX_NUMBER - 1) {
-        //     p.draft(newHandCardList[0])
-        //   } else {
-        //     p.draft(newHandCardList[p.playerID + 1])
-        //   }
-        // });
         io.sockets.emit(DRAFT, {value: PlayerStore.getCache()});
       }
     }
@@ -230,39 +137,6 @@ io.sockets.on(CONNECTION, (socket) => {
       RotationCountStore.startSecondRound();
       GameProgressStore.startSecondRound();
       PlayerStore.startSecondRound();
-      // rotationCount = 0;
-      // gameProgress = GAME_PROGRESS.SECOND_ROUND;
-      // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
-      // playerCache.forEach(p => {
-      //   let handCardList: Card[] = [];
-      //   // レアカード2枚
-      //   handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-      //   handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
-      //   // モンスター10枚
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 10]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 11]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 12]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 13]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 14]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 15]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 16]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 17]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 18]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 19]);
-      //   // 魔法3枚
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
-      //   // 罠3枚
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
-      //   // Ex3枚
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
-      //   p.draft(HandCardList.create(handCardList));
-      // });
       io.sockets.emit(SECOND_ROUND_START, {value: PlayerStore.getCache()});
     }
 
@@ -271,39 +145,6 @@ io.sockets.on(CONNECTION, (socket) => {
       RotationCountStore.startThirdRound();
       GameProgressStore.startThirdRound();
       PlayerStore.startThirdRound();
-      // rotationCount = 0;
-      // gameProgress = GAME_PROGRESS.THIRD_ROUND;
-      // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
-      // playerCache.forEach(p => {
-      //   let handCardList: Card[] = [];
-      //   // レアカード2枚
-      //   handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
-      //   handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
-      //   // モンスター10枚
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 20]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 21]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 22]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 23]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 24]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 25]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 26]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 27]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 28]);
-      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 29]);
-      //   // 魔法3枚
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
-      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
-      //   // 罠3枚
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
-      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
-      //   // Ex3枚
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
-      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
-      //   p.draft(HandCardList.create(handCardList));
-      // });
       io.sockets.emit(THIRD_ROUND_START, {value: PlayerStore.getCache()});
     }
 
@@ -311,8 +152,6 @@ io.sockets.on(CONNECTION, (socket) => {
     if (GameProgressStore.getCache() === GAME_PROGRESS.THIRD_ROUND && RotationCountStore.isMaxRotatoin()) {
       RotationCountStore.end();
       GameProgressStore.end();
-      // rotationCount = 0;
-      // gameProgress = GAME_PROGRESS.END;
       io.sockets.emit(END, {value: PlayerStore.getCache()});
     }
   });

@@ -23,6 +23,9 @@ import MonsterCardStore from "./dataStores/MonsterCardStore";
 import MagicCardStore from "./dataStores/MagicCardStore";
 import TrapCardStore from "./dataStores/TrapCardStore";
 import ExtraCardStore from "./dataStores/ExtraCardStore";
+import PickedUserCountStore from "./dataStores/PickedUserCountStore";
+import RotationCountStore from "./dataStores/RotationCountStore";
+import GameProgressStore from "./dataStores/GameProgressStore";
 
 /**
  * express設定
@@ -48,6 +51,9 @@ app.get('/cache', (_, res) => {
     MagicCardStore: MagicCardStore.getCache(),
     TrapCardStore: TrapCardStore.getCache(),
     ExtraCardStore: ExtraCardStore.getCache(),
+    PickedUserCountStore: PickedUserCountStore.getCache(),
+    RotationCountStore: RotationCountStore.getCache(),
+    GameProgressStore: GameProgressStore.getCache(),
     playerCache,
     rareCardCache,
     monsterCardCache,
@@ -91,6 +97,9 @@ MonsterCardStore.init();
 MagicCardStore.init();
 TrapCardStore.init();
 ExtraCardStore.init();
+PickedUserCountStore.init();
+RotationCountStore.init();
+GameProgressStore.init();
 
 /**
  * socket.io設定
@@ -99,15 +108,15 @@ io.sockets.on(CONNECTION, (socket) => {
   // ログイン
   socket.on(LOGIN, (data: { text: string, randomID: string }) => {
     const player: Player = Player.create({
-      playerID: playerCache.length, //socket.id,
+      playerID: PlayerStore.getCache().length, //socket.id,
       playerName: data.text,
       draftDeckList: [],
       handCardList: []
     });
-    playerCache.push(player);
+    // playerCache.push(player);
     PlayerStore.create(player);
     io.sockets.emit(LOGIN_SUCCESS,
-        {value: {player, players: playerCache, randomID: data.randomID}, playerID: player.playerID});
+        {value: {player, players: PlayerStore.getCache(), randomID: data.randomID}, playerID: player.playerID});
 
     // プレイヤー数が6人になったら、ドラフト開始する
     if (PlayerStore.isMaxPlayer()) {
@@ -117,54 +126,55 @@ io.sockets.on(CONNECTION, (socket) => {
       MagicCardStore.randomize();
       TrapCardStore.randomize();
       ExtraCardStore.randomize();
-      const randomOrderForRareCard = getRandomArray(rareCardCache.length);
-      rareCardCache = changeOrderArray(rareCardCache, randomOrderForRareCard);
-      // モンスターカードのランダマイズ
-      const randomOrderForMonsterCard = getRandomArray(monsterCardCache.length);
-      monsterCardCache = changeOrderArray(monsterCardCache, randomOrderForMonsterCard);
-      // 魔法カードのランダマイズ
-      const randomOrderForMagicCard = getRandomArray(magicCardCache.length);
-      magicCardCache = changeOrderArray(magicCardCache, randomOrderForMagicCard);
-      // 罠カードのランダマイズ
-      const randomOrderForTrapCard = getRandomArray(trapCardCache.length);
-      trapCardCache = changeOrderArray(trapCardCache, randomOrderForTrapCard);
-      // Exカードのランダマイズ
-      const randomOrderForExtraCard = getRandomArray(extraCardCache.length);
-      extraCardCache = changeOrderArray(extraCardCache, randomOrderForExtraCard);
+      // const randomOrderForRareCard = getRandomArray(rareCardCache.length);
+      // rareCardCache = changeOrderArray(rareCardCache, randomOrderForRareCard);
+      // // モンスターカードのランダマイズ
+      // const randomOrderForMonsterCard = getRandomArray(monsterCardCache.length);
+      // monsterCardCache = changeOrderArray(monsterCardCache, randomOrderForMonsterCard);
+      // // 魔法カードのランダマイズ
+      // const randomOrderForMagicCard = getRandomArray(magicCardCache.length);
+      // magicCardCache = changeOrderArray(magicCardCache, randomOrderForMagicCard);
+      // // 罠カードのランダマイズ
+      // const randomOrderForTrapCard = getRandomArray(trapCardCache.length);
+      // trapCardCache = changeOrderArray(trapCardCache, randomOrderForTrapCard);
+      // // Exカードのランダマイズ
+      // const randomOrderForExtraCard = getRandomArray(extraCardCache.length);
+      // extraCardCache = changeOrderArray(extraCardCache, randomOrderForExtraCard);
 
       // 各プレイヤーのhandCardListに、カードを渡す(draftメソッド使う)
-      playerCache.forEach(p => {
-        let handCardList: Card[] = [];
-        // レアカード2枚
-        handCardList.push(rareCardCache[p.playerID]);
-        handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-        // モンスター10枚
-        handCardList.push(monsterCardCache[p.playerID]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
-        handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 9]);
-        // 魔法3枚
-        handCardList.push(magicCardCache[p.playerID]);
-        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-        handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-        // 罠3枚
-        handCardList.push(trapCardCache[p.playerID]);
-        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-        handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-        // Ex3枚
-        handCardList.push(extraCardCache[p.playerID]);
-        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER]);
-        handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
-        p.draft(HandCardList.create(handCardList));
-      });
+      // playerCache.forEach(p => {
+      //   let handCardList: Card[] = [];
+      //   // レアカード2枚
+      //   handCardList.push(rareCardCache[p.playerID]);
+      //   handCardList.push(rareCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+      //   // モンスター10枚
+      //   handCardList.push(monsterCardCache[p.playerID]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 3]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 4]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 5]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 6]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 7]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 8]);
+      //   handCardList.push(monsterCardCache[p.playerID + PLAYER_MAX_NUMBER * 9]);
+      //   // 魔法3枚
+      //   handCardList.push(magicCardCache[p.playerID]);
+      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+      //   handCardList.push(magicCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+      //   // 罠3枚
+      //   handCardList.push(trapCardCache[p.playerID]);
+      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+      //   handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+      //   // Ex3枚
+      //   handCardList.push(extraCardCache[p.playerID]);
+      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER]);
+      //   handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
+      //   p.draft(HandCardList.create(handCardList));
+      // });
       PlayerStore.startFirstRound();
-      gameProgress = GAME_PROGRESS.FIRST_ROUND;
+      GameProgressStore.startFirstRound();
+      // gameProgress = GAME_PROGRESS.FIRST_ROUND;
       io.sockets.emit(FIRST_ROUND_START, {value: PlayerStore.getCache()});
     }
   });
@@ -172,40 +182,46 @@ io.sockets.on(CONNECTION, (socket) => {
   // ピック
   // TODO: 一旦cardTypeはnullにする
   socket.on(PICK, (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => {
-    playerCache.find(p => p.playerID === pickData.playerID)
-      .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
-    pickedUserCount++;
+    PlayerStore.pick(pickData);
+    // playerCache.find(p => p.playerID === pickData.playerID)
+    //   .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
+    PickedUserCountStore.pick();
+    // pickedUserCount++;
     io.sockets.emit(PICK_SUCCESS, {playerID: pickData.playerID});
 
     // 全員がピック完了したら、ドラフトをする
-    if (pickedUserCount === PLAYER_MAX_NUMBER && rotationCount !== ROTATION_MAX_NUMBER) {
-      pickedUserCount = 0;
-      rotationCount++;
+    if (PickedUserCountStore.isAllPlayerPick() && !RotationCountStore.isMaxRotatoin()) {
+      PickedUserCountStore.draft();
+      RotationCountStore.draft();
+      // pickedUserCount = 0;
+      // rotationCount++;
 
       // 1巡目と3巡目の場合は、インクリメントしたIDのプレイヤーへカードを順次渡していく
-      if (gameProgress === GAME_PROGRESS.FIRST_ROUND || gameProgress === GAME_PROGRESS.THIRD_ROUND) {
-        const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
-        playerCache.forEach((p, i) => {
-          if (i === 0) {
-            p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
-          } else {
-            p.draft(newHandCardList[p.playerID - 1])
-          }
-        });
-        io.sockets.emit(DRAFT, {value: playerCache});
+      if (GameProgressStore.isClockWise()) {
+        PlayerStore.draft(true);
+        // const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
+        // playerCache.forEach((p, i) => {
+        //   if (i === 0) {
+        //     p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
+        //   } else {
+        //     p.draft(newHandCardList[p.playerID - 1])
+        //   }
+        // });
+        io.sockets.emit(DRAFT, {value: PlayerStore.getCache()});
       }
 
       // 2巡目の場合は、逆順にカードを順次渡していく
-      if (gameProgress === GAME_PROGRESS.SECOND_ROUND) {
-        const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
-        playerCache.forEach((p, i) => {
-          if (i === PLAYER_MAX_NUMBER - 1) {
-            p.draft(newHandCardList[0])
-          } else {
-            p.draft(newHandCardList[p.playerID + 1])
-          }
-        });
-        io.sockets.emit(DRAFT, {value: playerCache});
+      if (GameProgressStore.isCounterClockWise()) {
+        PlayerStore.draft(false);
+        // const newHandCardList: HandCardList[] = playerCache.map(p => p.handCardList);
+        // playerCache.forEach((p, i) => {
+        //   if (i === PLAYER_MAX_NUMBER - 1) {
+        //     p.draft(newHandCardList[0])
+        //   } else {
+        //     p.draft(newHandCardList[p.playerID + 1])
+        //   }
+        // });
+        io.sockets.emit(DRAFT, {value: PlayerStore.getCache()});
       }
     }
 

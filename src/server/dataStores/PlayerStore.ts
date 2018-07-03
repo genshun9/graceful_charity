@@ -26,8 +26,9 @@ class PlayerStore extends AbstractDataStore <Player[]>{
   }
 
   // プレイヤーがカードをpickした時に実行
-  pick():void {
-
+  pick(pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string }} ):void {
+    this.getCache().find(p => p.playerID === pickData.playerID)
+      .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
   }
 
   // FirstRound開始時に実行
@@ -70,9 +71,27 @@ class PlayerStore extends AbstractDataStore <Player[]>{
     });
   }
 
-  // ドラフト時に実行
-  draft():void {
-
+  // ドラフト時に実行、引数がtrueなら時計回りにdraftする
+  draft(isClockWise:boolean):void {
+    if (isClockWise) {
+      const newHandCardList: HandCardList[] = this.cache.map(p => p.handCardList);
+      this.cache.forEach((p, i) => {
+        if (i === 0) {
+          p.draft(newHandCardList[PLAYER_MAX_NUMBER - 1])
+        } else {
+          p.draft(newHandCardList[p.playerID - 1])
+        }
+      });
+    } else {
+      const newHandCardList: HandCardList[] = this.cache.map(p => p.handCardList);
+      this.cache.forEach((p, i) => {
+        if (i === PLAYER_MAX_NUMBER - 1) {
+          p.draft(newHandCardList[0])
+        } else {
+          p.draft(newHandCardList[p.playerID + 1])
+        }
+      });
+    }
   }
 
   // 次のラウンドに移る時に実行

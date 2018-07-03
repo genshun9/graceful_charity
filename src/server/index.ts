@@ -18,6 +18,11 @@ import {
   PICK_SUCCESS, SECOND_ROUND_START, THIRD_ROUND_START
 } from "../common/constants/SocketMessage";
 import PlayerStore from "./dataStores/PlayerStore";
+import RareCardStore from "./dataStores/RareCardStore";
+import MonsterCardStore from "./dataStores/MonsterCardStore";
+import MagicCardStore from "./dataStores/MagicCardStore";
+import TrapCardStore from "./dataStores/TrapCardStore";
+import ExtraCardStore from "./dataStores/ExtraCardStore";
 
 /**
  * express設定
@@ -38,6 +43,11 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.get('/cache', (_, res) => {
   const cache = {
     PlayerStore: PlayerStore.getCache(),
+    RareCardStore: RareCardStore.getCache(),
+    MonsterCardStore: MonsterCardStore.getCache(),
+    MagicCardStore: MagicCardStore.getCache(),
+    TrapCardStore: TrapCardStore.getCache(),
+    ExtraCardStore: ExtraCardStore.getCache(),
     playerCache,
     rareCardCache,
     monsterCardCache,
@@ -67,7 +77,6 @@ server.listen(PORT, () => {
  * キャッシュデータをまとめる
  */
 var playerCache: Player[] = [];
-PlayerStore.init();
 var rareCardCache: Card[] = RareCardList.map(c => Card.create(c));
 var monsterCardCache: Card[] = MonsterCardList.map(c => Card.create(c));
 var magicCardCache: Card[] = MagicCardList.map(c => Card.create(c));
@@ -76,6 +85,12 @@ var extraCardCache: Card[] = ExtraCardList.map(c => Card.create(c));
 var pickedUserCount: number = 0;
 var rotationCount: number = 0;
 var gameProgress: number = GAME_PROGRESS.NOT_LOGIN;
+PlayerStore.init();
+RareCardStore.init();
+MonsterCardStore.init();
+MagicCardStore.init();
+TrapCardStore.init();
+ExtraCardStore.init();
 
 /**
  * socket.io設定
@@ -97,6 +112,11 @@ io.sockets.on(CONNECTION, (socket) => {
     // プレイヤー数が6人になったら、ドラフト開始する
     if (PlayerStore.isMaxPlayer()) {
       // レアカードのランダマイズ
+      RareCardStore.randomize();
+      MonsterCardStore.randomize();
+      MagicCardStore.randomize();
+      TrapCardStore.randomize();
+      ExtraCardStore.randomize();
       const randomOrderForRareCard = getRandomArray(rareCardCache.length);
       rareCardCache = changeOrderArray(rareCardCache, randomOrderForRareCard);
       // モンスターカードのランダマイズ
@@ -143,8 +163,9 @@ io.sockets.on(CONNECTION, (socket) => {
         handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * 2]);
         p.draft(HandCardList.create(handCardList));
       });
+      PlayerStore.startFirstRound();
       gameProgress = GAME_PROGRESS.FIRST_ROUND;
-      io.sockets.emit(FIRST_ROUND_START, {value: playerCache});
+      io.sockets.emit(FIRST_ROUND_START, {value: PlayerStore.getCache()});
     }
   });
 
@@ -282,7 +303,7 @@ io.sockets.on(CONNECTION, (socket) => {
 /**
  * 0から引数-1までの整数が、ランダムに格納された配列を返却するメソッド
  */
-const getRandomArray: (a: number) => number[] = (maxNumber: number) => {
+export const getRandomArray: (a: number) => number[] = (maxNumber: number) => {
   //生成した乱数を格納する配列を初期化
   let arr: number[] = [];
   //生成した乱数を格納している配列の長さ（生成した乱数の数）
@@ -306,7 +327,7 @@ const getRandomArray: (a: number) => number[] = (maxNumber: number) => {
 /**
  * 順序を変更したい配列と、変更したい順序(index)の配列を渡すと、配列の並びが変わるメソッド
  */
-const changeOrderArray: (a: any[], b: number[]) => any[] = (dataArray: any[], orderArray: number[]) => {
+export const changeOrderArray: (a: any[], b: number[]) => any[] = (dataArray: any[], orderArray: number[]) => {
   let resultArray = [];
   orderArray.forEach(i => resultArray.push(dataArray[i]));
   return resultArray;

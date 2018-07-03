@@ -3,13 +3,8 @@ import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as socketIo from 'socket.io';
 import * as path from "path";
-import Player from './models/Player';
 import {PORT} from "./serverApplicationConstants";
-import {GAME_PROGRESS} from "../common/constants/Enums";
-import {
-  CONNECTION, DISCONNECT, DRAFT, END, FIRST_ROUND_START, LOGIN, LOGIN_SUCCESS, PICK,
-  PICK_SUCCESS, SECOND_ROUND_START, THIRD_ROUND_START
-} from "../common/constants/SocketMessage";
+import {CONNECTION, DISCONNECT, LOGIN, PICK} from "../common/constants/SocketMessage";
 import PlayerStore from "./dataStores/PlayerStore";
 import RareCardStore from "./dataStores/RareCardStore";
 import MonsterCardStore from "./dataStores/MonsterCardStore";
@@ -19,6 +14,8 @@ import ExtraCardStore from "./dataStores/ExtraCardStore";
 import PickedUserCountStore from "./dataStores/PickedUserCountStore";
 import RotationCountStore from "./dataStores/RotationCountStore";
 import GameProgressStore from "./dataStores/GameProgressStore";
+import LoginController from "./controllers/LoginController";
+import PickController from "./controllers/PickController";
 
 /**
  * express設定
@@ -81,86 +78,14 @@ GameProgressStore.init();
  */
 io.sockets.on(CONNECTION, (socket) => {
   // ログイン
-  socket.on(LOGIN, (data: { text: string, randomID: string }) => {
-    const player: Player = Player.create({
-      playerID: PlayerStore.getCache().length,
-      playerName: data.text,
-      draftDeckList: [],
-      handCardList: []
-    });
-    PlayerStore.create(player);
-    io.sockets.emit(LOGIN_SUCCESS,
-        {value: {player, players: PlayerStore.getCache(), randomID: data.randomID}, playerID: player.playerID});
-
-    // プレイヤー数が6人になったら、ドラフト開始する
-    if (PlayerStore.isMaxPlayer()) {
-      // レアカードのランダマイズ
-      RareCardStore.randomize();
-      MonsterCardStore.randomize();
-      MagicCardStore.randomize();
-      TrapCardStore.randomize();
-      ExtraCardStore.randomize();
-      // 第1ラウンド開始
-      PlayerStore.startFirstRound();
-      GameProgressStore.startFirstRound();
-      io.sockets.emit(FIRST_ROUND_START, {value: PlayerStore.getCache()});
-    }
-  });
+  socket.on(LOGIN, (data: { text: string, randomID: string }) => LoginController.login(data, io));
 
   // ピック
   // TODO: 一旦cardTypeはnullにする
-  socket.on(PICK, (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => {
-    PlayerStore.pick(pickData);
-    PickedUserCountStore.pick();
-    io.sockets.emit(PICK_SUCCESS, {playerID: pickData.playerID});
-
-    // 全員がピック完了したら、ドラフトをする
-    if (PickedUserCountStore.isAllPlayerPick() && !RotationCountStore.isMaxRotatoin()) {
-      PickedUserCountStore.draft();
-      RotationCountStore.draft();
-
-      // 1巡目と3巡目の場合は、インクリメントしたIDのプレイヤーへカードを順次渡していく
-      if (GameProgressStore.isClockWise()) {
-        PlayerStore.draft(true);
-        io.sockets.emit(DRAFT, {value: PlayerStore.getCache()});
-      }
-
-      // 2巡目の場合は、逆順にカードを順次渡していく
-      if (GameProgressStore.isCounterClockWise()) {
-        PlayerStore.draft(false);
-        io.sockets.emit(DRAFT, {value: PlayerStore.getCache()});
-      }
-    }
-
-    // FIRST_ROUNDで、全員がピック完了し、21巡したら、SECOND_ROUNDを開始する
-    if (GameProgressStore.getCache() === GAME_PROGRESS.FIRST_ROUND && RotationCountStore.isMaxRotatoin()) {
-      RotationCountStore.startSecondRound();
-      GameProgressStore.startSecondRound();
-      PlayerStore.startSecondRound();
-      io.sockets.emit(SECOND_ROUND_START, {value: PlayerStore.getCache()});
-    }
-
-    // SECOND_ROUNDで、全員がピック完了し、21巡したら、THIRD_ROUNDを開始する
-    if (GameProgressStore.getCache() === GAME_PROGRESS.SECOND_ROUND && RotationCountStore.isMaxRotatoin()) {
-      RotationCountStore.startThirdRound();
-      GameProgressStore.startThirdRound();
-      PlayerStore.startThirdRound();
-      io.sockets.emit(THIRD_ROUND_START, {value: PlayerStore.getCache()});
-    }
-
-    // THIRD_ROUNDで、全員がピック完了し、21巡したら、ピック終了となる
-    if (GameProgressStore.getCache() === GAME_PROGRESS.THIRD_ROUND && RotationCountStore.isMaxRotatoin()) {
-      RotationCountStore.end();
-      GameProgressStore.end();
-      io.sockets.emit(END, {value: PlayerStore.getCache()});
-    }
-  });
+  socket.on(PICK, (pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string } }) => PickController.pick(pickData, io));
 
   // 接続終了イベント
-  socket.on(DISCONNECT, () => {
-    console.log("disconnect");
-    io.sockets.emit("publish", {});
-  });
+  socket.on(DISCONNECT, () => console.log("disconnect"));
 });
 
 /**

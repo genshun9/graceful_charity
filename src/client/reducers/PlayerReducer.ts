@@ -2,7 +2,7 @@ import Player from '../models/Player';
 import {
   DRAFT, END, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SECOND_ROUND_START,
   SELECT_CARD, THIRD_ROUND_START
-} from "../constants/Constants";
+} from "../constants/ActionConstants"
 
 export type NotSelect = "NotSelect";
 export type Selecting = string;

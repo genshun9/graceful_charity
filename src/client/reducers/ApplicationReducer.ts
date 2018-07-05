@@ -1,8 +1,9 @@
 import Player from "../models/Player";
 import {GAME_PROGRESS} from "../../common/constants/Enums";
 import {
+  ActionPayload,
   CHANGE_PLAYER_NAME, DRAFT, END, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS, SECOND_ROUND_START,
-  SEND_PLAYER_NAME, THIRD_ROUND_START
+  SEND_PLAYER_NAME, SocketActionPayload, THIRD_ROUND_START
 } from "../constants/ActionConstants";
 
 interface ApplicationState {
@@ -19,7 +20,7 @@ const initState: ApplicationState = {
   players: []
 };
 
-export const ApplicationReducer = (state: ApplicationState = initState, action) => {
+export const ApplicationReducer = (state: ApplicationState = initState, action: ActionPayload | SocketActionPayload) => {
   switch (action.type) {
     case CHANGE_PLAYER_NAME:
       return Object.assign({}, state, {
@@ -36,7 +37,7 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       const loginSuccessState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.LOGIN,
         connecting: false,
-        players: action.payload.value.players.map(p => Player.create(p))
+        players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
       });
       return loginSuccessState;
 
@@ -44,7 +45,7 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       const firstRoundStartState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.FIRST_ROUND,
         connecting: false,
-        players: action.payload.value.map(p => Player.create(p))
+        players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
       });
       return firstRoundStartState;
 
@@ -52,7 +53,7 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       const secondRoundStartState = Object.assign({}, state, {
       gameProgress: GAME_PROGRESS.SECOND_ROUND,
       connecting: false,
-      players: action.payload.value.map(p => Player.create(p))
+      players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
     });
       return secondRoundStartState;
 
@@ -60,7 +61,7 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       const thirdRoundStartState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.THIRD_ROUND,
         connecting: false,
-        players: action.payload.value.map(p => Player.create(p))
+        players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
       });
       return thirdRoundStartState;
 
@@ -68,7 +69,7 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
       const lastState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.END,
         connecting: false,
-        players: action.payload.value.map(p => Player.create(p))
+        players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
       });
       return lastState;
 
@@ -78,7 +79,7 @@ export const ApplicationReducer = (state: ApplicationState = initState, action) 
 
     case DRAFT:
       const draftState = Object.assign({}, state, {
-        players: action.payload.value.map(p => Player.create(p))
+        players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
       });
       return draftState;
 

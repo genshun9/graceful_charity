@@ -12,6 +12,9 @@ export const convertPlayer2PlayerIO:(player: Player) => PlayerIO = (player:Playe
   }
 };
 
+export const convertPlayers2PlayerIO2:(players: Player[]) => PlayerIO[]
+  = (players) => players.map(p => convertPlayer2PlayerIO(p));
+
 // clientに送信する際のconverter
 export const convertCard2CordIO: (card: Card) => CardIO = card => ({
   name: card.name,

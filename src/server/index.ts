@@ -17,7 +17,7 @@ import GameProgressStore from "./dataStores/GameProgressStore";
 import LoginController from "./controllers/LoginController";
 import PickController from "./controllers/PickController";
 import {SocketIO} from "../common/types";
-import {convertSocketIO2Pick, convertSoketIO2Login} from "./types";
+import {convertSocketIO2Pick, convertSoketIO2Login} from "./dtos";
 
 /**
  * express設定

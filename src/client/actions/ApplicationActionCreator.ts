@@ -2,6 +2,7 @@ import {
   ActionPayload, CHANGE_PLAYER_NAME, END, LOGIN_SUCCESS, PICK_SUCCESS, SEND_PLAYER_NAME,
   SocketActionPayload, THIRD_ROUND_START, DRAFT, FIRST_ROUND_START, SECOND_ROUND_START
 } from "../constants/ActionConstants";
+import {ClientDto} from "../dtos/index";
 
 class ApplicationActionCreator {
   constructor(){
@@ -21,35 +22,35 @@ class ApplicationActionCreator {
     }
   }
 
-  public loginSuccess(data: any):SocketActionPayload {
+  public loginSuccess(data: ClientDto):SocketActionPayload {
     return {
       type: LOGIN_SUCCESS,
       payload: data
     }
   }
 
-  public firstRoundStart(data: any):SocketActionPayload {
+  public firstRoundStart(data: ClientDto):SocketActionPayload {
     return {
       type: FIRST_ROUND_START,
       payload: data
     }
   }
 
-  public secondRoundStart(data: any):SocketActionPayload {
+  public secondRoundStart(data: ClientDto):SocketActionPayload {
     return {
       type: SECOND_ROUND_START,
       payload: data
     }
   }
 
-  public thirdRoundStart(data: any):SocketActionPayload {
+  public thirdRoundStart(data: ClientDto):SocketActionPayload {
     return {
       type: THIRD_ROUND_START,
       payload: data
     }
   }
 
-  public draftEnd(data: any):SocketActionPayload {
+  public draftEnd(data: ClientDto):SocketActionPayload {
     return {
       type: END,
       payload: data

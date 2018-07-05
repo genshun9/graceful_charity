@@ -7,6 +7,7 @@ import MagicCardStore from "../dataStores/MagicCardStore";
 import TrapCardStore from "../dataStores/TrapCardStore";
 import {FIRST_ROUND_START, LOGIN_SUCCESS} from "../../common/constants/SocketMessage";
 import ExtraCardStore from "../dataStores/ExtraCardStore";
+import {convertPlayer2PlayerIO, convertPlayers2PlayerIO2} from "../dtos/index";
 
 class LoginController {
   login(data, io): void {
@@ -17,8 +18,12 @@ class LoginController {
       handCardList: []
     });
     PlayerStore.create(player);
-    io.sockets.emit(LOGIN_SUCCESS,
-      {value: {player, players: PlayerStore.getCache(), randomID: data.randomID}, playerID: player.playerID});
+    io.sockets.emit(LOGIN_SUCCESS, {
+      player: convertPlayer2PlayerIO(player),
+      players: convertPlayers2PlayerIO2(PlayerStore.getCache()),
+      randomID: data.randomID,
+      playerID: player.playerID
+    });
 
     // プレイヤー数が6人になったら、ドラフト開始する
     if (PlayerStore.isMaxPlayer()) {
@@ -31,7 +36,9 @@ class LoginController {
       // 第1ラウンド開始
       PlayerStore.startFirstRound();
       GameProgressStore.startFirstRound();
-      io.sockets.emit(FIRST_ROUND_START, {value: PlayerStore.getCache()});
+      io.sockets.emit(FIRST_ROUND_START, {
+        players: convertPlayers2PlayerIO2(PlayerStore.getCache())
+      });
     }
   }
 }

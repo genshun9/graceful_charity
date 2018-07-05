@@ -1,4 +1,4 @@
-import {SocketIO} from "../../common/types";
+import {ClientDto} from "../dtos/index";
 
 type ChangePlayerName = 'CHANGE_PLAYER_NAME';
 type SendPlayerName = 'SEND_PLAYER_NAME';
@@ -52,5 +52,5 @@ export type SocketActionType =
 
 export interface SocketActionPayload {
   type: SocketActionType,
-  payload: SocketIO
+  payload: ClientDto
 }

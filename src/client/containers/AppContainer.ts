@@ -3,7 +3,7 @@ import AppComponent from "../components/AppComponent";
 import * as io from "socket.io-client";
 import ApplicationActionCreator from "../actions/ApplicationActionCreator";
 import Player from "../models/Player";
-import {PUBLIC_IP} from "../constants/Constants";
+import {PUBLIC_IP} from "../constants/ClientApplicationConstants";
 
 export type Socket = SocketIOClient.Socket
 

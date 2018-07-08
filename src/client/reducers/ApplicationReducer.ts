@@ -78,7 +78,6 @@ export const ApplicationReducer = (state: ApplicationState = initState, action: 
     case PICK_SUCCESS:
       // 本来はaction.payload.playerIDに合致するユーザのみconnectingをfalseにしたかった。
       state.pickedPlayerIDs.push((action as SocketActionPayload).payload.playerID);
-      console.log("check", state);
       return state;
 
     case DRAFT:

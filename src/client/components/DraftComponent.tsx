@@ -6,6 +6,14 @@ import {GAME_PROGRESS} from "../../common/constants/Enums";
 import {ROTATION_MAX_NUMBER} from "../constants/ClientApplicationConstants";
 
 const DraftComponent: React.SFC<DraftProps> = props => {
+  const pickCount = (props.me.draftDeckList.length + 1 ) % (ROTATION_MAX_NUMBER) === 0
+    ? (ROTATION_MAX_NUMBER) : (props.me.draftDeckList.length + 1 ) % (ROTATION_MAX_NUMBER);
+  const progressMessageElm = (
+    <div style={{paddingLeft: 20, fontSize: 20, fontWeight: 600}}>
+      {`第${props.gameProgress - 2}巡目の${pickCount}ピック目`}
+    </div>
+  );
+
   const pickButton = (
     <span style={{paddingLeft: 20, paddingRight: 20}}>
       <Button type="submit"
@@ -60,10 +68,10 @@ const DraftComponent: React.SFC<DraftProps> = props => {
   );
 
   const playerListElm = (
-    <div style={{paddingLeft: 20}}>
+    <div style={{paddingLeft: 20, fontSize: 15, fontWeight: 500}}>
       {"プレイヤー順: "}
       {props.players.map((p, i) => {
-        const style = (p.playerID === props.me.playerID) ? {color: "red", fontSize: 15} : {color: "black", fontSize: 15};
+        const style = (p.playerID === props.me.playerID) ? {color: "red"} : {color: "black"};
         // includesの型定義がない？のでsomeメソッドを使う
         const playerName = props.pickedPlayerIDs.some(id => id === p.playerID) ? `${p.playerName}` : `${p.playerName}(ピック中)`;
         return (
@@ -86,6 +94,8 @@ const DraftComponent: React.SFC<DraftProps> = props => {
 
   return (
     <div>
+      <br/>
+      {progressMessageElm}
       <br/>
       {pickButton}
       {showPickListButton}

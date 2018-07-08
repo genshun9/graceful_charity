@@ -73,6 +73,12 @@ npm run server-compile
 - デッキレシピは、モンスター/魔法/罠に分けたい。あとピック履歴も巡毎に表示したい。
 - 6人ドラなら1列6枚カードのほうが良さそう。
 
+## v1.0設計メモ
+- singletonの実装
+    - typescriptでsingleton https://qiita.com/tonkotsuboy_com/items/225d08e915a57777c9dc
+    - 継承可能なsingletonメモ https://qiita.com/mutsuyuki/items/2a97ac896507899749d5
+    - protectedを使った解決方法 https://github.com/Microsoft/TypeScript/issues/2341
+
 ## 更新履歴
 - 6/16 Initial Commit
 - 6/30 アルファ版リリース

@@ -2,8 +2,9 @@ import * as React from "react";
 import {DraftProps} from "../containers/DraftContainer";
 import CardComponent from "./CardComponent";
 import {Button, OverlayTrigger, Popover} from 'react-bootstrap'
-import {GAME_PROGRESS} from "../../common/constants/Enums";
+import {CARD_TYPE, GAME_PROGRESS} from "../../common/constants/Enums";
 import {ROTATION_MAX_NUMBER} from "../constants/ClientApplicationConstants";
+import Card from "../models/Card";
 
 const DraftComponent: React.SFC<DraftProps> = props => {
   const pickCount = (props.me.draftDeckList.length + 1 ) % (ROTATION_MAX_NUMBER) === 0
@@ -30,7 +31,7 @@ const DraftComponent: React.SFC<DraftProps> = props => {
   const pickListPopover = (
     <Popover id="popover-trigger-click-root-close" title="ピック順に表示">
       {props.me.draftDeckList.map((d, i) => (
-        <div key={`deck-${i}`}>{d.name}</div>
+        <div key={`pick-${i}`}>{d.name}</div>
       ))}
     </Popover>
   );
@@ -47,11 +48,44 @@ const DraftComponent: React.SFC<DraftProps> = props => {
     </span>
   );
 
+  // TODO: 途中段階
+  // sortの内容が何故かbooleanとして認識されないので一旦any
+  const createDeckListElm = (cardList: Card[]) => {
+    let monsterElm = [];
+    let magicElm = [];
+    let trapElm = [];
+    let extraElm = [];
+    cardList.sort((a, b) => (a.cardType > b.cardType as any)).forEach((s, i) => {
+      switch (s.cardType) {
+        case CARD_TYPE.MONSTER:
+          monsterElm.push(<div key={`deck-${i}`} style={{color: "saddlebrown"}}>{s.name}</div>);
+          break;
+        case CARD_TYPE.MAGIC:
+          magicElm.push(<div key={`deck-${i}`} style={{color: "forestgreen"}}>{s.name}</div>);
+          break;
+        case CARD_TYPE.TRAP:
+          trapElm.push(<div key={`deck-${i}`} style={{color: "mediumvioletred"}}>{s.name}</div>);
+          break;
+        case CARD_TYPE.EXTRA:
+          extraElm.push(<div key={`deck-${i}`} style={{color: "gray"}}>{s.name}</div>);
+          break;
+        default:
+          break;
+      }
+    });
+    return (
+      <div>
+        <span>{monsterElm}</span>
+        <span>{magicElm}</span>
+        <span>{trapElm}</span>
+        <span>{extraElm}</span>
+      </div>
+    )
+  };
+
   const deckListPopover = (
     <Popover id="popover-trigger-click-root-close" title="カード種別に表示">
-      {props.me.draftDeckList.map((d, i) => (
-        <div key={`deck-${i}`}>{d.name}</div>
-      ))}
+      {createDeckListElm(props.me.draftDeckList)}
     </Popover>
   );
 

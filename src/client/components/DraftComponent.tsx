@@ -9,9 +9,15 @@ import Card from "../models/Card";
 const DraftComponent: React.SFC<DraftProps> = props => {
   const pickCount = (props.me.draftDeckList.length + 1 ) % (ROTATION_MAX_NUMBER) === 0
     ? (ROTATION_MAX_NUMBER) : (props.me.draftDeckList.length + 1 ) % (ROTATION_MAX_NUMBER);
+  const pickState = props.selectingCardID === "Picked" ? "他のプレイヤーのピック待ちです" : "ピック中";
   const progressMessageElm = (
     <div style={{paddingLeft: 20, fontSize: 20, fontWeight: 600}}>
+      <span>
       {`第${props.gameProgress - 2}巡目の${pickCount}ピック目`}
+      </span>
+      <span style={{color: "blue", paddingLeft: 40}}>
+        {pickState}
+      </span>
     </div>
   );
 

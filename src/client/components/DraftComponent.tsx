@@ -61,11 +61,14 @@ const DraftComponent: React.SFC<DraftProps> = props => {
 
   const playerListElm = (
     <div style={{paddingLeft: 20}}>
+      {"プレイヤー順: "}
       {props.players.map((p, i) => {
-        const style = (p.playerID === props.me.playerID) ? {color: "red", fontSize: 20} : {color: "black", fontSize: 20};
+        const style = (p.playerID === props.me.playerID) ? {color: "red", fontSize: 15} : {color: "black", fontSize: 15};
+        // includesの型定義がない？のでsomeメソッドを使う
+        const playerName = props.pickedPlayerIDs.some(id => id === p.playerID) ? `${p.playerName}` : `${p.playerName}(ピック中)`;
         return (
           (props.gameProgress === GAME_PROGRESS.SECOND_ROUND) ?
-            <span style={style} key={i}>{`プレイヤー順: ${p.playerName} ← `}</span> : <span style={style} key={i}>{`プレイヤー順: ${p.playerName} → `}</span>
+            <span style={style} key={i}>{`${playerName} ← `}</span> : <span style={style} key={i}>{`${playerName} → `}</span>
         )
       })}
     </div>

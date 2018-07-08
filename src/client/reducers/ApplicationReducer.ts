@@ -10,14 +10,16 @@ interface ApplicationState {
   inputPlayerName: string;
   connecting: boolean;
   gameProgress: number;
-  players: Player[]
+  players: Player[],
+  pickedPlayerIDs: number[]
 }
 
 const initState: ApplicationState = {
   inputPlayerName: "",
   connecting: false,
   gameProgress: GAME_PROGRESS.NOT_LOGIN,
-  players: []
+  players: [],
+  pickedPlayerIDs: []
 };
 
 export const ApplicationReducer = (state: ApplicationState = initState, action: ActionPayload | SocketActionPayload) => {
@@ -75,11 +77,14 @@ export const ApplicationReducer = (state: ApplicationState = initState, action: 
 
     case PICK_SUCCESS:
       // 本来はaction.payload.playerIDに合致するユーザのみconnectingをfalseにしたかった。
+      state.pickedPlayerIDs.push((action as SocketActionPayload).payload.playerID);
+      console.log("check", state);
       return state;
 
     case DRAFT:
       const draftState = Object.assign({}, state, {
-        players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
+        players: (action as SocketActionPayload).payload.players.map(p => Player.create(p)),
+        pickedPlayerIDs: []
       });
       return draftState;
 

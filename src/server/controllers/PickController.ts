@@ -4,10 +4,10 @@ import GameProgressStore from "../dataStores/GameProgressStore";
 import {GAME_PROGRESS} from "../../common/constants/Enums";
 import PickedUserCountStore from "../dataStores/PickedUserCountStore";
 import RotationCountStore from "../dataStores/RotationCountStore";
-import {convertPlayers2PlayerIO2} from "../dtos/index";
+import {convertPlayers2PlayerIO2, ServerDto} from "../dtos/index";
 
 class PickController {
-  pick(pickData, io): void {
+  pick(pickData: ServerDto, io): void {
     PlayerStore.pick(pickData);
     PickedUserCountStore.pick();
     io.sockets.emit(PICK_SUCCESS, {playerID: pickData.playerID});

@@ -12,6 +12,7 @@ import MonsterCardStore from "./MonsterCardStore";
 import MagicCardStore from "./MagicCardStore";
 import TrapCardStore from "./TrapCardStore";
 import ExtraCardStore from "./ExtraCardStore";
+import {ServerDto} from "../dtos";
 
 class PlayerStore extends AbstractDataStore <Player[]>{
   // サーバ起動時に実行
@@ -30,9 +31,9 @@ class PlayerStore extends AbstractDataStore <Player[]>{
   }
 
   // プレイヤーがカードをpickした時に実行
-  pick(pickData: { playerID: number, card: { name: string, cardID: string, cardURL: string, cardType: number }} ):void {
+  pick(pickData: ServerDto):void {
     this.getCache().find(p => p.playerID === pickData.playerID)
-      .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: null});
+      .pick({name: pickData.card.name, cardID: pickData.card.cardID, cardURL: pickData.card.cardURL, cardType: pickData.card.cardType});
   }
 
   startFirstRound():void {

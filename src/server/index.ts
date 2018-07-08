@@ -17,7 +17,7 @@ import GameProgressStore from "./dataStores/GameProgressStore";
 import LoginController from "./controllers/LoginController";
 import PickController from "./controllers/PickController";
 import {SocketIO} from "../common/types";
-import {convertSocketIO2Pick, convertSoketIO2Login} from "./dtos";
+import {convertFromSocketIO} from "./dtos";
 
 /**
  * express設定
@@ -79,7 +79,7 @@ GameProgressStore.init();
  * socket.io設定
  */
 io.sockets.on(CONNECTION, (socket) => {
-  socket.on(LOGIN, (data: SocketIO) => LoginController.login(convertSoketIO2Login(data), io));
-  socket.on(PICK, (data: SocketIO) => PickController.pick(convertSocketIO2Pick(data), io));
+  socket.on(LOGIN, (data: SocketIO) => LoginController.login(convertFromSocketIO(data), io));
+  socket.on(PICK, (data: SocketIO) => PickController.pick(convertFromSocketIO(data), io));
   socket.on(DISCONNECT, () => console.log("disconnect"));
 });

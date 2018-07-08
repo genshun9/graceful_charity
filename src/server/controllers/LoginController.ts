@@ -8,14 +8,16 @@ import TrapCardStore from "../dataStores/TrapCardStore";
 import {FIRST_ROUND_START, LOGIN_SUCCESS} from "../../common/constants/SocketMessage";
 import ExtraCardStore from "../dataStores/ExtraCardStore";
 import {convertPlayer2PlayerIO, convertPlayers2PlayerIO2} from "../dtos/index";
+import {ServerDto} from "../dtos";
 
 class LoginController {
-  login(data, io): void {
+  login(data:ServerDto, io): void {
+    // TODO: 引数がダサいので直したい
     const player: Player = Player.create({
       playerID: PlayerStore.getCache().length,
       playerName: data.text,
       draftDeckList: [],
-      handCardList: []
+      handCardList: {handCard: []}
     });
     PlayerStore.create(player);
     io.sockets.emit(LOGIN_SUCCESS, {

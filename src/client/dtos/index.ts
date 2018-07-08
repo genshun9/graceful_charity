@@ -1,4 +1,5 @@
-import {CardIO, PlayerIO, SocketIO} from "../../common/types/index";
+import {CardIO, PlayerIO, SocketIO} from "../../common/types";
+import * as _ from "lodash";
 
 export interface ClientDto {
   player?: PlayerDto,
@@ -23,13 +24,15 @@ export interface CardDto {
   cardType: number
 }
 
+// TODO: ここをキレイに実装したい
+// serverから受信した際のconverter
 export const convertFromSocketIO: (s:SocketIO) => ClientDto = data => ({
-  player: isUndefined(data.player) ? undefined : convertPlayerIO2PlayerDto(data.player),
-  players: isUndefined(data.players) ? undefined : data.players.map(p => convertPlayerIO2PlayerDto(p)),
-  playerID: isUndefined(data.playerID) ? undefined : data.playerID,
-  card: isUndefined(data.card) ? undefined : convertCardIO2CardDto(data.card),
-  text: isUndefined(data.text) ? undefined : data.text,
-  randomID: isUndefined(data.randomID) ? undefined : data.randomID
+  player: _.isUndefined(data.player) ? undefined : convertPlayerIO2PlayerDto(data.player),
+  players: _.isUndefined(data.players) ? undefined : data.players.map(p => convertPlayerIO2PlayerDto(p)),
+  playerID: _.isUndefined(data.playerID) ? undefined : data.playerID,
+  card: _.isUndefined(data.card) ? undefined : convertCardIO2CardDto(data.card),
+  text: _.isUndefined(data.text) ? undefined : data.text,
+  randomID: _.isUndefined(data.randomID) ? undefined : data.randomID
 });
 
 export const convertPlayerIO2PlayerDto: (p: PlayerIO) => PlayerDto = data => ({
@@ -45,5 +48,3 @@ export const convertCardIO2CardDto: (c: CardIO) => CardDto = data => ({
   cardURL: data.cardURL,
   cardType: data.cardType
 });
-
-const isUndefined:(d:any) => boolean = data => data === undefined;

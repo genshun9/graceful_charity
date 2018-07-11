@@ -1,8 +1,9 @@
 import Player from '../models/Player';
 import {
+  ActionPayload,
   DRAFT, END, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_CARD, SECOND_ROUND_START,
-  SELECT_CARD, THIRD_ROUND_START
-} from "../constants/Constants";
+  SELECT_CARD, SocketActionPayload, THIRD_ROUND_START
+} from "../constants/ActionConstants"
 
 export type NotSelect = "NotSelect";
 export type Selecting = string;
@@ -24,36 +25,36 @@ const initState: PlayerState = {
   selectedCardID: ""
 };
 
-export const PlayerReducer = (state: PlayerState = initState, action) => {
+export const PlayerReducer = (state: PlayerState = initState, action: ActionPayload | SocketActionPayload) => {
   switch (action.type) {
     case LOGIN_SUCCESS:
-      const updateMe = action.payload.value.randomID === state.randomID ?
-        Player.create(action.payload.value.player) : state.me;
+      const updateMe = (action as SocketActionPayload).payload.randomID === state.randomID ?
+        Player.create((action as SocketActionPayload).payload.player) : state.me;
       return Object.assign({}, state, {
         me: updateMe
       });
 
     case FIRST_ROUND_START:
       const firstRoundStartState = Object.assign({}, state, {
-        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+        me: Player.create((action as SocketActionPayload).payload.players.find(v => v.playerID === state.me.playerID))
       });
       return firstRoundStartState;
 
     case SECOND_ROUND_START:
       const secondRoundStartState = Object.assign({}, state, {
-        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+        me: Player.create((action as SocketActionPayload).payload.players.find(v => v.playerID === state.me.playerID))
       });
       return secondRoundStartState;
 
     case THIRD_ROUND_START:
       const thirdRoundStartState = Object.assign({}, state, {
-        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+        me: Player.create((action as SocketActionPayload).payload.players.find(v => v.playerID === state.me.playerID))
       });
       return thirdRoundStartState;
 
     case END:
       const lastPlayerState = Object.assign({}, state, {
-        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID))
+        me: Player.create((action as SocketActionPayload).payload.players.find(v => v.playerID === state.me.playerID))
       });
       return lastPlayerState;
 
@@ -72,7 +73,7 @@ export const PlayerReducer = (state: PlayerState = initState, action) => {
 
     case DRAFT:
       const draftState = Object.assign({}, state, {
-        me: Player.create(action.payload.value.find(v => v.playerID === state.me.playerID)),
+        me: Player.create((action as SocketActionPayload).payload.players.find(v => v.playerID === state.me.playerID)),
         selectingCardID: "NotSelect",
         selectedCardID: ""
       });

@@ -3,7 +3,8 @@ import AppComponent from "../components/AppComponent";
 import * as io from "socket.io-client";
 import ApplicationActionCreator from "../actions/ApplicationActionCreator";
 import Player from "../models/Player";
-import {PUBLIC_IP} from "../constants/Constants";
+import {PUBLIC_IP} from "../constants/ClientApplicationConstants";
+import {convertFromSocketIO} from "../dtos/index";
 
 export type Socket = SocketIOClient.Socket
 
@@ -35,13 +36,13 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    loginSuccess: data => dispatch(ApplicationActionCreator.loginSuccess(data)),
-    firstRoundStart: data => dispatch(ApplicationActionCreator.firstRoundStart(data)),
-    secondRoundStart: data => dispatch(ApplicationActionCreator.secondRoundStart(data)),
-    thirdRoundStart: data => dispatch(ApplicationActionCreator.thirdRoundStart(data)),
-    draftEnd: data => dispatch(ApplicationActionCreator.draftEnd(data)),
-    pickSuccess: data => dispatch(ApplicationActionCreator.pickSuccess(data)),
-    draft: data => dispatch(ApplicationActionCreator.draft(data))
+    loginSuccess: data => dispatch(ApplicationActionCreator.loginSuccess(convertFromSocketIO(data))),
+    firstRoundStart: data => dispatch(ApplicationActionCreator.firstRoundStart(convertFromSocketIO(data))),
+    secondRoundStart: data => dispatch(ApplicationActionCreator.secondRoundStart(convertFromSocketIO(data))),
+    thirdRoundStart: data => dispatch(ApplicationActionCreator.thirdRoundStart(convertFromSocketIO(data))),
+    draftEnd: data => dispatch(ApplicationActionCreator.draftEnd(convertFromSocketIO(data))),
+    pickSuccess: data => dispatch(ApplicationActionCreator.pickSuccess(convertFromSocketIO(data))),
+    draft: data => dispatch(ApplicationActionCreator.draft(convertFromSocketIO(data)))
   }
 };
 

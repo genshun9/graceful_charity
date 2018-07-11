@@ -39,11 +39,11 @@ const DeckListPopoverComponent: React.SFC<CardListProps> = props => {
   const createTdElement = (cardList: Card[], index:number, styleColor:string) => {
     if (cardList.length < maxCardNumber && cardList.length < index + 1) {
       return (
-        <td style={{paddingLeft: 20, width: 100}}></td>
+        <td style={{paddingLeft: 20, width: 200}}></td>
       )
     } else {
       return (
-        <td style={{paddingLeft: 20, width: 100, color: styleColor}}>{cardList[index].name}</td>
+        <td style={{paddingLeft: 20, width: 200, color: styleColor}}>{cardList[index].name}</td>
       )
     }
   };
@@ -58,10 +58,10 @@ const DeckListPopoverComponent: React.SFC<CardListProps> = props => {
       <table style={{fontSize: 15}}>
         <tbody>
         <tr>
-          <th style={{paddingLeft: 20, width: 100}}>モンスター</th>
-          <th style={{paddingLeft: 20, width: 100}}>魔法</th>
-          <th style={{paddingLeft: 20, width: 100}}>罠</th>
-          <th style={{paddingLeft: 20, width: 100}}>エクストラ</th>
+          <th style={{paddingLeft: 20, width: 200}}>モンスター</th>
+          <th style={{paddingLeft: 20, width: 200}}>魔法</th>
+          <th style={{paddingLeft: 20, width: 200}}>罠</th>
+          <th style={{paddingLeft: 20, width: 200}}>エクストラ</th>
         </tr>
         {arrayForTrMap.map((v, i) => (
           <tr key={i}>

@@ -52,6 +52,15 @@ app.get('/cache', (_, res) => {
 });
 
 /**
+ * localStorage内のデータを消去する強制終了エンドポイント
+ */
+app.get('/end', (_, res) => {
+  res.header("Content-Type", "text/html;charset=utf-8");
+  res.write("<html><body>アプリを強制終了しました。<script>window.localStorage.clear();</script></body>");
+  res.end();
+});
+
+/**
  * httpサーバ設定
  * 上記のexpress設定をhttpサーバに付与する
  * ポート8000を開き、webSocketをlistenする

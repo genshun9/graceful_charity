@@ -5,4 +5,4 @@ import reducers from './reducers';
 
 export const Store = compose(
   applyMiddleware(save({namespace: "graceful_charity"}), thunkMiddleware)
-)(createStore)(reducers, load());
+)(createStore)(reducers, load({namespace: "graceful_charity"}));

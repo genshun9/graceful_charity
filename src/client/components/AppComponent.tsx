@@ -45,12 +45,14 @@ const AppComponent = WithLifecycleComponent<AppProps>(
       socket.on(END, (data: any) => props.draftEnd(data));
       socket.on(PICK_SUCCESS, (data: any) => props.pickSuccess(data));
       socket.on(DRAFT, (data: any) => props.draft(data));
-    },
-    willUnmount: (props: AppProps) => {
-      // TODO: 実行されない
-      if (props.gameProgress === GAME_PROGRESS.END) {
-        window.localStorage.clear();
-      }
+      // ドラフト終了時に、ブラウザ閉じられた場合、localStorageをクリアにする
+      window.addEventListener('beforeunload', (e) => {
+        if (props.gameProgress === GAME_PROGRESS.END) {
+          window.localStorage.clear();
+        } else {
+          e.returnValue = 'まだドラフト中です';
+        }
+      }, false);
     }
   }
 );

@@ -3,6 +3,7 @@ import {
   SocketActionPayload, THIRD_ROUND_START, DRAFT, FIRST_ROUND_START, SECOND_ROUND_START
 } from "../constants/ActionConstants";
 import {ClientDto} from "../dtos/index";
+import {LOGIN_FAILURE} from "../../common/constants/SocketMessage";
 
 class ApplicationActionCreator {
   constructor(){
@@ -26,6 +27,14 @@ class ApplicationActionCreator {
     return {
       type: LOGIN_SUCCESS,
       payload: data
+    }
+  }
+
+  // データ通信ないので、型をanyとして逃げる
+  public loginFailure():any {
+    return {
+      type: LOGIN_FAILURE,
+      payload: {}
     }
   }
 

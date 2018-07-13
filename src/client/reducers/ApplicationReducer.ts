@@ -5,6 +5,7 @@ import {
   CHANGE_PLAYER_NAME, DRAFT, END, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS, SECOND_ROUND_START,
   SEND_PLAYER_NAME, SocketActionPayload, THIRD_ROUND_START
 } from "../constants/ActionConstants";
+import {LOGIN_FAILURE} from "../../common/constants/SocketMessage";
 
 interface ApplicationState {
   inputPlayerName: string;
@@ -42,6 +43,12 @@ export const ApplicationReducer = (state: ApplicationState = initState, action: 
         players: (action as SocketActionPayload).payload.players.map(p => Player.create(p))
       });
       return loginSuccessState;
+
+    case LOGIN_FAILURE:
+      const loginFailureState = Object.assign({}, state, {
+        gameProgress: GAME_PROGRESS.LOGIN_FAILURE,
+      });
+      return loginFailureState;
 
     case FIRST_ROUND_START:
       const firstRoundStartState = Object.assign({}, state, {

@@ -34,6 +34,7 @@ export const PlayerReducer = (state: PlayerState = initState, action: ActionPayl
         me: updateMe
       });
 
+      // PLAYER_MAX_NUMBER以上のプレイヤーが画面を開いている時meがnullなのでjsでコケる。そもそも想定人数以上が画面を開いているケースを想定していないので、後回し
     case FIRST_ROUND_START:
       const firstRoundStartState = Object.assign({}, state, {
         me: Player.create((action as SocketActionPayload).payload.players.find(v => v.playerID === state.me.playerID))

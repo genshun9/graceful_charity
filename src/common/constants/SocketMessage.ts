@@ -2,6 +2,7 @@ export const CONNECTION:string = 'connection';
 export const DISCONNECT:string = 'disconnect';
 export const LOGIN:string = 'LOGIN';
 export const LOGIN_SUCCESS:string = 'LOGIN_SUCCESS';
+export const LOGIN_FAILURE:string = 'LOGIN_FAILURE';
 export const PICK:string = 'PICK';
 export const PICK_SUCCESS:string = 'PICK_SUCCESS';
 export const DRAFT:string = 'DRAFT';

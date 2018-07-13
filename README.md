@@ -10,13 +10,21 @@
 ```
 
 ## 使い方
+- ツールを使う時は[ゲンシュンドラフトオンラインツールの使い方](how_to_use.md)を参照。
+
 - 開発時
 ```
-クライアント側のコンパイル(parcelによる常時コンパイル)
+# ライブラリのインストール
+npm i
+
+# クライアント側のコンパイル(parcelによる常時コンパイル)
 npm run client-compile
 
-サーバ側のコンパイル及びサーバ起動
+# サーバ側のコンパイル及びサーバ起動
 npm run server-compile
+
+# ブラウザで以下のURLを開く
+localhost:8000
 ```
 
 ## 設計思想メモ
@@ -50,6 +58,11 @@ npm run server-compile
 - serverについて
     - index.tsにまとめて書いていたので、controllerとキャッシュを操作するdataStoreに分離してみた。
 
+### ver_2
+- 新しい概念
+    - ブラウザを誤って閉じてもreducerの状態をlocalStorageに保存する機能を実装。
+    - redux-localstorage-simpleというライブラリで全て解決した。
+
 ## 課題
 ### elmの断念について
 - elmとsocket.ioの相性が悪く、★が最も多い[socketioライブラリ](mgold/elm-socketio)がelm-langのv0.18に対応していないので、elmをやめる。
@@ -79,12 +92,10 @@ npm run server-compile
     - webpack.config.jsを必要としない魅力はあるが、上記の理由により、parcelはやめたほうが良さそう。
 
 ## v2.0の開発アイテム
-- ピック中か否かを表示する機能がバグっていた。
-- ブラウザ閉じると、一生戻らない問題の解消（localStorageに保持する）。
 - レア枠は表示してほしい（本当に必要？）。
 - 誰でも起動できるコマンド、手引き。
 
 ## 更新履歴
 - 6/16 Initial Commit
-- 6/30 アルファ版リリース
+- 6/30 ver_α版リリース
 - 7/12 ver_1_0版リリース

@@ -59,9 +59,16 @@ localhost:8000
     - index.tsにまとめて書いていたので、controllerとキャッシュを操作するdataStoreに分離してみた。
 
 ### ver_2
-- 新しい概念
+- client
     - ブラウザを誤って閉じてもreducerの状態をlocalStorageに保存する機能を実装。
     - redux-localstorage-simpleというライブラリで全て解決した。
+- 環境変数
+    - server側はtsでコンパイルしているので、dotenvというライブラリを使って特に詰まることなく実装できた。
+    - 一方でparcelを使った際の環境変数の読み込み方に苦労したが、productionビルドのためだけにwebpackを使うのは違うと思って調べた。
+        - [ここ](https://github.com/parcel-bundler/parcel/commit/50de97fb1239b7079f36c3897fe0c0c5f2e39070)曰く、デフォルトで.envを読み込めるとのことだったので、dotenvと定数が共有できた。
+    - parceのdevとproductionビルド、それぞれ出力するjs名が変わるのと、production時はbabelrcが必要だった。
+        - そのため、productionビルド成功後js名をdevで出力されるjs名にrenameする処理が必要だった。
+    - 諸々考慮して、やっぱりparcelは今後使いたくない。
 
 ## 課題
 ### elmの断念について

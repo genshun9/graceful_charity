@@ -84,8 +84,11 @@ export const ApplicationReducer = (state: ApplicationState = initState, action: 
 
     case PICK_SUCCESS:
       // 本来はaction.payload.playerIDに合致するユーザのみconnectingをfalseにしたかった。
-      state.pickedPlayerIDs.push((action as SocketActionPayload).payload.playerID);
-      return state;
+      // state.pickedPlyaerIDs.push()を使うと、stateの変更をviewが感知できなかったので、concatを無理やり使ってみた。
+      const pickSuccessState = Object.assign({}, state, {
+        pickedPlayerIDs: state.pickedPlayerIDs.concat([(action as SocketActionPayload).payload.playerID])
+      });
+      return pickSuccessState;
 
     case DRAFT:
       const draftState = Object.assign({}, state, {

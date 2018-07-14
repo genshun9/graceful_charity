@@ -101,7 +101,7 @@ class PlayerStore extends AbstractDataStore <Player[]>{
     for (let i = 0; i < TRAP_CARD_INIT_NUMBER; i++) {
       handCardList.push(trapCardCache[p.playerID + PLAYER_MAX_NUMBER * (i + TRAP_CARD_INIT_NUMBER * (round - 1))]);
     }
-    // Ex3枚
+    // Ex4枚
     for (let i = 0; i < EXTRA_CARD_INIT_NUMBER; i++) {
       handCardList.push(extraCardCache[p.playerID + PLAYER_MAX_NUMBER * (i + EXTRA_CARD_INIT_NUMBER * (round - 1))]);
     }

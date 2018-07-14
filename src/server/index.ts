@@ -90,5 +90,5 @@ GameProgressStore.init();
 io.sockets.on(CONNECTION, (socket) => {
   socket.on(LOGIN, (data: SocketIO) => LoginController.login(convertFromSocketIO(data), io));
   socket.on(PICK, (data: SocketIO) => PickController.pick(convertFromSocketIO(data), io));
-  socket.on(DISCONNECT, () => console.log("disconnect"));
+  socket.on(DISCONNECT, () => {});
 });

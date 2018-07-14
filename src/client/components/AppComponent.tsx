@@ -10,7 +10,7 @@ import {
 } from "../../common/constants/SocketMessage";
 import {GAME_PROGRESS} from "../../common/constants/Enums";
 import LoginFailureComponent from "./LoginFailureComponent";
-import {SocketIO} from "../../common/types/index";
+import {SocketIO} from "../../common/types";
 
 const AppComponentSFC: React.SFC<AppProps> = props => {
   if (props.gameProgress === GAME_PROGRESS.NOT_LOGIN || props.gameProgress === GAME_PROGRESS.LOGIN) {

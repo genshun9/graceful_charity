@@ -7,7 +7,7 @@ import MagicCardStore from "../dataStores/MagicCardStore";
 import TrapCardStore from "../dataStores/TrapCardStore";
 import {FIRST_ROUND_START, LOGIN_FAILURE, LOGIN_SUCCESS} from "../../common/constants/SocketMessage";
 import ExtraCardStore from "../dataStores/ExtraCardStore";
-import {convertPlayer2PlayerIO, convertPlayers2PlayerIO2} from "../dtos/index";
+import {convertPlayer2PlayerIO, convertPlayers2PlayerIO2} from "../dtos";
 import {ServerDto} from "../dtos";
 import {PLAYER_MAX_NUMBER} from "../serverApplicationConstants";
 

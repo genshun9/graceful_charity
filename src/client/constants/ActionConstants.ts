@@ -1,4 +1,4 @@
-import {ClientDto} from "../dtos/index";
+import {ClientDto} from "../dtos";
 
 type ChangePlayerName = 'CHANGE_PLAYER_NAME';
 type SendPlayerName = 'SEND_PLAYER_NAME';

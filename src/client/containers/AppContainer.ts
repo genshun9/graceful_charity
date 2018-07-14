@@ -4,8 +4,8 @@ import * as io from "socket.io-client";
 import ApplicationActionCreator from "../actions/ApplicationActionCreator";
 import Player from "../models/Player";
 import {PORT, PUBLIC_IP} from "../constants/ClientApplicationConstants";
-import {convertFromSocketIO} from "../dtos/index";
-import {SocketIO} from "../../common/types/index";
+import {convertFromSocketIO} from "../dtos";
+import {SocketIO} from "../../common/types";
 
 export type Socket = SocketIOClient.Socket
 

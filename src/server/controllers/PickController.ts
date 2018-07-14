@@ -4,7 +4,7 @@ import GameProgressStore from "../dataStores/GameProgressStore";
 import {GAME_PROGRESS} from "../../common/constants/Enums";
 import PickedUserCountStore from "../dataStores/PickedUserCountStore";
 import RotationCountStore from "../dataStores/RotationCountStore";
-import {convertPlayers2PlayerIO2, ServerDto} from "../dtos/index";
+import {convertPlayers2PlayerIO2, ServerDto} from "../dtos";
 
 class PickController {
   pick(pickData: ServerDto, io): void {

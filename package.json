@@ -7,10 +7,8 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "rm -rf dist && rm -rf .cache && ./node_modules/.bin/parcel build _index.html --no-minify && find ./dist -name '*.js' -exec bash -c 'mv $0 ./dist/entry.8850c411.js' {} + && find ./dist -name '*.map' -exec bash -c 'mv $0 ./dist/entry.8850c411.map' {} +",
     "client-compile": "./node_modules/.bin/parcel _index.html",
-    "server-compile": "rm -rf js && ./node_modules/.bin/tsc && node js/server/index.js",
-    "server-run": "node js/server/index.js"
+    "server-compile": "rm -rf js && ./node_modules/.bin/tsc && node js/server/index.js"
   },
   "repository": {
     "type": "git",

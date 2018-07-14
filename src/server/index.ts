@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as socketIo from 'socket.io';
 import * as path from "path";
-import {PORT} from "./serverApplicationConstants";
+import {PUBLIC_IP, PORT} from "./serverApplicationConstants";
 import {CONNECTION, DISCONNECT, LOGIN, PICK} from "../common/constants/SocketMessage";
 import PlayerStore from "./dataStores/PlayerStore";
 import RareCardStore from "./dataStores/RareCardStore";
@@ -68,7 +68,7 @@ app.get('/end', (_, res) => {
 const server = http.createServer(app);
 const io = socketIo.listen(server);
 server.listen(PORT, () => {
-  console.log(`listening on PORT: ${PORT}`);
+  console.log(`サーバを起動: http://${PUBLIC_IP}:${PORT}`);
 });
 
 /**

@@ -2,7 +2,8 @@ import {
   ActionPayload, CHANGE_PLAYER_NAME, END, LOGIN_SUCCESS, PICK_SUCCESS, SEND_PLAYER_NAME,
   SocketActionPayload, THIRD_ROUND_START, DRAFT, FIRST_ROUND_START, SECOND_ROUND_START
 } from "../constants/ActionConstants";
-import {ClientDto} from "../dtos/index";
+import {ClientDto} from "../dtos";
+import {LOGIN_FAILURE} from "../../common/constants/SocketMessage";
 
 class ApplicationActionCreator {
   constructor(){
@@ -26,6 +27,14 @@ class ApplicationActionCreator {
     return {
       type: LOGIN_SUCCESS,
       payload: data
+    }
+  }
+
+  // データ通信ないので、型をanyとして逃げる
+  public loginFailure():any {
+    return {
+      type: LOGIN_FAILURE,
+      payload: {}
     }
   }
 

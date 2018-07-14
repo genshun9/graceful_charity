@@ -4,7 +4,7 @@ import GameProgressStore from "../dataStores/GameProgressStore";
 import {GAME_PROGRESS} from "../../common/constants/Enums";
 import PickedUserCountStore from "../dataStores/PickedUserCountStore";
 import RotationCountStore from "../dataStores/RotationCountStore";
-import {convertPlayers2PlayerIO2, ServerDto} from "../dtos/index";
+import {convertPlayers2PlayerIO2, ServerDto} from "../dtos";
 
 class PickController {
   pick(pickData: ServerDto, io): void {
@@ -34,7 +34,7 @@ class PickController {
       }
     }
 
-    // FIRST_ROUNDで、全員がピック完了し、21巡したら、SECOND_ROUNDを開始する
+    // FIRST_ROUNDで、全員がピック完了し、22巡したら、SECOND_ROUNDを開始する
     if (GameProgressStore.getCache() === GAME_PROGRESS.FIRST_ROUND && RotationCountStore.isMaxRotatoin()) {
       RotationCountStore.startSecondRound();
       GameProgressStore.startSecondRound();
@@ -44,7 +44,7 @@ class PickController {
       });
     }
 
-    // SECOND_ROUNDで、全員がピック完了し、21巡したら、THIRD_ROUNDを開始する
+    // SECOND_ROUNDで、全員がピック完了し、22巡したら、THIRD_ROUNDを開始する
     if (GameProgressStore.getCache() === GAME_PROGRESS.SECOND_ROUND && RotationCountStore.isMaxRotatoin()) {
       RotationCountStore.startThirdRound();
       GameProgressStore.startThirdRound();
@@ -54,7 +54,7 @@ class PickController {
       });
     }
 
-    // THIRD_ROUNDで、全員がピック完了し、21巡したら、ピック終了となる
+    // THIRD_ROUNDで、全員がピック完了し、22巡したら、ピック終了となる
     if (GameProgressStore.getCache() === GAME_PROGRESS.THIRD_ROUND && RotationCountStore.isMaxRotatoin()) {
       RotationCountStore.end();
       GameProgressStore.end();

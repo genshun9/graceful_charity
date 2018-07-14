@@ -16,7 +16,7 @@ const CardComponent: React.SFC<CardProps> = props => {
     : {width: 120, border: "solid 5px transparent"};
   return (
     <span style={{padding: 4}}>
-      <img src={`../../../src/assets/${props.card.cardURL}.jpg`}
+      <img src={`../../../../assets/${props.card.cardURL}.jpg`}
            style={style}
            onClick={() => props.selectingCardID === "Picked" ? {} : props.onClickCard(props.card.cardID)
            }/>

@@ -5,6 +5,7 @@ import {
   CHANGE_PLAYER_NAME, DRAFT, END, FIRST_ROUND_START, LOGIN_SUCCESS, PICK_SUCCESS, SECOND_ROUND_START,
   SEND_PLAYER_NAME, SocketActionPayload, THIRD_ROUND_START
 } from "../constants/ActionConstants";
+import {LOGIN_FAILURE} from "../../common/constants/SocketMessage";
 
 interface ApplicationState {
   inputPlayerName: string;
@@ -43,6 +44,12 @@ export const ApplicationReducer = (state: ApplicationState = initState, action: 
       });
       return loginSuccessState;
 
+    case LOGIN_FAILURE:
+      const loginFailureState = Object.assign({}, state, {
+        gameProgress: GAME_PROGRESS.LOGIN_FAILURE,
+      });
+      return loginFailureState;
+
     case FIRST_ROUND_START:
       const firstRoundStartState = Object.assign({}, state, {
         gameProgress: GAME_PROGRESS.FIRST_ROUND,
@@ -77,8 +84,11 @@ export const ApplicationReducer = (state: ApplicationState = initState, action: 
 
     case PICK_SUCCESS:
       // 本来はaction.payload.playerIDに合致するユーザのみconnectingをfalseにしたかった。
-      state.pickedPlayerIDs.push((action as SocketActionPayload).payload.playerID);
-      return state;
+      // state.pickedPlyaerIDs.push()を使うと、stateの変更をviewが感知できなかったので、concatを無理やり使ってみた。
+      const pickSuccessState = Object.assign({}, state, {
+        pickedPlayerIDs: state.pickedPlayerIDs.concat([(action as SocketActionPayload).payload.playerID])
+      });
+      return pickSuccessState;
 
     case DRAFT:
       const draftState = Object.assign({}, state, {

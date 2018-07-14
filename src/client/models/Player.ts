@@ -1,6 +1,6 @@
 import Card from "./Card";
 import AbstractPlayer from "../../common/models/AbstractPlayer";
-import {PlayerDto} from "../dtos/index";
+import {PlayerDto} from "../dtos";
 
 export default class Player extends AbstractPlayer {
   draftDeckList: Card[];

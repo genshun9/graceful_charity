@@ -10,13 +10,21 @@
 ```
 
 ## 使い方
+- ツールを使う時は[ゲンシュンドラフトオンラインツールの使い方](how_to_use.md)を参照。
+
 - 開発時
 ```
-クライアント側のコンパイル(parcelによる常時コンパイル)
+# ライブラリのインストール
+npm i
+
+# クライアント側のコンパイル(parcelによる常時コンパイル)
 npm run client-compile
 
-サーバ側のコンパイル及びサーバ起動
+# サーバ側のコンパイル及びサーバ起動
 npm run server-compile
+
+# ブラウザで以下のURLを開く
+localhost:8000
 ```
 
 ## 設計思想メモ
@@ -50,6 +58,18 @@ npm run server-compile
 - serverについて
     - index.tsにまとめて書いていたので、controllerとキャッシュを操作するdataStoreに分離してみた。
 
+### ver_2
+- client
+    - ブラウザを誤って閉じてもreducerの状態をlocalStorageに保存する機能を実装。
+    - redux-localstorage-simpleというライブラリで全て解決した。
+- 環境変数
+    - server側はtsでコンパイルしているので、dotenvというライブラリを使って特に詰まることなく実装できた。
+    - 一方でparcelを使った際の環境変数の読み込み方に苦労したが、productionビルドのためだけにwebpackを使うのは違うと思って調べた。
+        - [ここ](https://github.com/parcel-bundler/parcel/commit/50de97fb1239b7079f36c3897fe0c0c5f2e39070)曰く、デフォルトで.envを読み込めるとのことだったので、dotenvと定数が共有できた。
+    - parceのdevとproductionビルド、それぞれ出力するjs名が変わるのと、production時はbabelrcが必要だった。
+        - そのため、productionビルド成功後js名をdevで出力されるjs名にrenameする処理が必要だった。
+    - 諸々考慮して、やっぱりparcelは今後使いたくない。
+
 ## 課題
 ### elmの断念について
 - elmとsocket.ioの相性が悪く、★が最も多い[socketioライブラリ](mgold/elm-socketio)がelm-langのv0.18に対応していないので、elmをやめる。
@@ -78,13 +98,15 @@ npm run server-compile
 - typescriptで実装しているが、parcelのコンパイル、結構ガバガバであった。 
     - webpack.config.jsを必要としない魅力はあるが、上記の理由により、parcelはやめたほうが良さそう。
 
-## v2.0の開発アイテム
-- ピック中か否かを表示する機能がバグっていた。
-- ブラウザ閉じると、一生戻らない問題の解消（localStorageに保持する）。
-- レア枠は表示してほしい（本当に必要？）。
-- 誰でも起動できるコマンド、手引き。
+## v3.0の開発アイテム
+- 6ドラ、8ドラを自由に変更出来るようにする。
+- カードリスト.txtをいじればカードリスト変更出来るようにする。
+- ピック譜を出力。
+- 感想戦の実装。
+- pick専用のCPUプレイヤー。
 
 ## 更新履歴
 - 6/16 Initial Commit
-- 6/30 アルファ版リリース
+- 6/30 ver_α版リリース
 - 7/12 ver_1_0版リリース
+- 7/14 ver_2_0版リリース

@@ -4,7 +4,8 @@ export enum GAME_PROGRESS {
   FIRST_ROUND = 3,
   SECOND_ROUND = 4,
   THIRD_ROUND = 5,
-  END = 6
+  END = 6,
+  LOGIN_FAILURE = 7
 }
 
 export enum CARD_TYPE {

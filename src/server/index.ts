@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import * as http from 'http';
 import * as socketIo from 'socket.io';
 import * as path from "path";
-import {PORT} from "./serverApplicationConstants";
+import {PUBLIC_IP, PORT} from "./serverApplicationConstants";
 import {CONNECTION, DISCONNECT, LOGIN, PICK} from "../common/constants/SocketMessage";
 import PlayerStore from "./dataStores/PlayerStore";
 import RareCardStore from "./dataStores/RareCardStore";
@@ -52,6 +52,15 @@ app.get('/cache', (_, res) => {
 });
 
 /**
+ * localStorage内のデータを消去する強制終了エンドポイント
+ */
+app.get('/end', (_, res) => {
+  res.header("Content-Type", "text/html;charset=utf-8");
+  res.write("<html><body>アプリを強制終了しました。<script>window.localStorage.clear();</script></body>");
+  res.end();
+});
+
+/**
  * httpサーバ設定
  * 上記のexpress設定をhttpサーバに付与する
  * ポート8000を開き、webSocketをlistenする
@@ -59,7 +68,7 @@ app.get('/cache', (_, res) => {
 const server = http.createServer(app);
 const io = socketIo.listen(server);
 server.listen(PORT, () => {
-  console.log(`listening on PORT: ${PORT}`);
+  console.log(`サーバを起動: http://${PUBLIC_IP}:${PORT}`);
 });
 
 /**
@@ -81,5 +90,5 @@ GameProgressStore.init();
 io.sockets.on(CONNECTION, (socket) => {
   socket.on(LOGIN, (data: SocketIO) => LoginController.login(convertFromSocketIO(data), io));
   socket.on(PICK, (data: SocketIO) => PickController.pick(convertFromSocketIO(data), io));
-  socket.on(DISCONNECT, () => console.log("disconnect"));
+  socket.on(DISCONNECT, () => {});
 });

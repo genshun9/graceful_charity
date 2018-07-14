@@ -1,3 +1,4 @@
-export const PUBLIC_IP:string = 'localhost';
-export const PLAYER_MAX_NUMBER: number = 6;
-export const ROTATION_MAX_NUMBER: number = 21; // 各cardListのlengthの総和/人数/3
+export const PUBLIC_IP:string = process.env.PUBLIC_IP;
+export const PORT: string = process.env.PORT || "8000";
+export const PLAYER_MAX_NUMBER: number = Number(process.env.PLAYER_MAX_NUMBER); //プレイヤー数
+export const ROTATION_MAX_NUMBER: number = Number(process.env.ROUTATION_MAX_NUMBER); // 各cardListのlengthの総和/人数/3process.env.

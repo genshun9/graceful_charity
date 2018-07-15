@@ -39,21 +39,60 @@
 
 <a name="header-7a716g74re"></a>
 ## 起動方法(事前準備)
-- 前提条件
-  - nodeのバージョンが9.0.0以上
-  - npmのバージョンが6.0.0以上
-  - node及びnpmのPATHが通っている事
-  - Hamachiインストール済み
+- 前提条件。
+  - nodeのバージョンが9.0.0以上。
+  - npmのバージョンが6.0.0以上。
+  - node及びnpmのPATHが通っている事(npmとnodeコマンドが使えること)。
+  - Hamachiインストール済み。
 - リポジトリを `git clone git@github.com:genshun9/graceful_charity.git`かdownloadZipする。
 - `.env`というファイルを開き、`PUBLIC_IP=`の右側にある`localhost`をhamachiのIP(例:aa.bb.cc.dd)に書き換える。
 <a name="header-qijryeiwqs"></a>
 ## 起動方法(サーバ起動)
-- ターミナル上で `sh shtart.sh` を実行。
+- ターミナル上で `sh start.sh` を実行。
 - `サーバを起動: http://aa.bb.cc.dd:8000` という文字が表示されたら完了。
 - 初期値ゲンシュンドラフトのカードプールで、6人ドラフト開始出来る。
 
 <a name="header-fi6n6h6k0k"></a>
 ## 操作方法と注意事項
+- 操作方法。
+  - ピックツールの使い方自体は[遊戯王ドラフト用のオンラインピックツール紹介](https://youtu.be/uec0pONBNls)にて説明。
+- 注意事項。
+  - windows及びmacのChromeでの動作確認はしておりますが、IEやSafariは確認していない。
 
 <a name="header-p4yg1o6o8j"></a>
 ## カードプールの変更の仕方
+現在カードプールの変更がやりづらいので、やりやすいように改良する予定。
+
+### 仕組みの説明
+- 現状6人固定になっているので、6人ドラフトにおけるカードプールの変更の仕方を以下に記載。
+- `.env`ファイルを開くと、以下のような設定項目がある。
+```
+RARE_CARD_INIT_NUMBER=2
+MONSTER_CARD_INIT_NUMBER=10
+MAGIC_CARD_INIT_NUMBER=3
+TRAP_CARD_INIT_NUMBER=3
+EXTRA_CARD_INIT_NUMBER=4
+ROUTATION_MAX_NUMBER=22
+```
+- これは1パック内の、レア枠・モンスター枠・魔法枠・罠枠・エクストラ枠の、それぞれの枚数を表現する。
+- つまり、レア2枚、モンスター10枚、魔法3枚、罠3枚、エクストラ4枚、合計22枚が `ROUTATION_MAX_NUMBER` と同じ数値になっている。
+  - 各枠の合計が `ROUTATION_MAX_NUMBER` と同じになるようにする必要がある。
+- カードの画像は `assets` 配下に `.jpg` 形式で保存。
+- カード名は、`src/common/constants` 配下にべた書きで書かれている。
+  - 見てみるとわかるが、各カードについて`cardURL`という値を持っており、これが`assets`配下の画像の名前と合致してる。
+  - 同じカード名だけど、それぞれ違いを識別させるために`cardID`というユニークなIDを振って識別している。
+- 例えばエクストラカードについては、`EXTRA_CARD_INIT_NUMBER`が4なので、つまり1パックにつき4枠×6人×3パックの合計72枚のカードがこのドラフトで必要である。
+  - `src/common/constants/ExtraCardList.ts` には、カード情報が72行書かれている(36種×2枚ずつ)。
+  - `assets`配下に36種類のエクストラカードの画像が置いてある。
+
+### カードプールの変更例
+- カードを変更したい場合。
+  - モンスター枠の「エフェクト・ヴェーラー」を「灰流うらら」に変更する例を以下に記載。
+  - 「灰流うらら」の画像を`assets/`配下に `XXXX.jpg`として保存する。
+  - `src/common/constants/MonstarCardList.ts`に、「エフェクト・ヴェーラー」が3行あるので、`name`を「灰流うらら」に、`cardURL`を`XXXX`に変更する。
+  - ターミナル上で`sh start.sh`を実行する。
+- 各パックの枠数を変更したい場合。
+  - 例えばモンスター枠を10から8に変更する例を以下に記載。
+  - `.env`ファイルの`MONSTER_CARD_INIT_NUMBER`を10から8へ、合計枚数が22から20になったので`ROUTATION_MAX_NUMBER`を22から20に変更する。
+  - `src/common/constants/MonsterCardList.ts`は現在180行あるので、これを8枠×6人×3パックの144行になるように、いじる。
+  - ターミナル上で`sh start.sh`を実行する。

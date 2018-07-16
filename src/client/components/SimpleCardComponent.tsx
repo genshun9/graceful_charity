@@ -9,7 +9,7 @@ export interface SimpleCardProps {
 const SimpleCardComponent: React.SFC<SimpleCardProps> = props => {
   return (
     <span style={{padding: 2}}>
-      <img src={`../../../../assets/${props.card.cardURL}.jpg`}
+      <img src={`../../../../assets/img/${props.card.cardURL}.jpg`}
            style={{width: 100}}
            />
     </span>

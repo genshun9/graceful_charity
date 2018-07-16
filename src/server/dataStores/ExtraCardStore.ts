@@ -1,12 +1,17 @@
 import Card from "../models/Card";
 import AbstractDataStore from "./AbstractDataStore";
 import {changeOrderArray, getRandomArray} from "../utils";
+import {EXTRA_CARD_INIT_NUMBER, PLAYER_MAX_NUMBER} from "../serverApplicationConstants";
 const fs = require('fs');
 
 class ExtraCardStore extends AbstractDataStore <Card[]>{
   // サーバ起動時に実行
   init():void {
     this.cache = JSON.parse(fs.readFileSync('assets/outputCardList/extra.json', 'utf8')).map(c => Card.create(c));
+    if (this.cache.length !== PLAYER_MAX_NUMBER * EXTRA_CARD_INIT_NUMBER * 3) {
+      const errMsg = `エクストラカードの総和が${PLAYER_MAX_NUMBER * EXTRA_CARD_INIT_NUMBER * 3}ありません。\nassets/inputCardList/extra.txtと.envが辻褄合うように修正してください。`;
+      throw errMsg;
+    }
   }
 
   // ゲームスタート時のランダマイズで実行

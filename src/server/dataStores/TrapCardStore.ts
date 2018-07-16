@@ -1,12 +1,12 @@
 import Card from "../models/Card";
 import AbstractDataStore from "./AbstractDataStore";
-import TrapCardList from "../../common/constants/TrapCardList";
 import {changeOrderArray, getRandomArray} from "../utils";
+const fs = require('fs');
 
 class TrapCardStore extends AbstractDataStore <Card[]>{
   // サーバ起動時に実行
   init():void {
-    this.cache = TrapCardList.map(c => Card.create(c));
+    this.cache = JSON.parse(fs.readFileSync('assets/outputCardList/trap.json', 'utf8')).map(c => Card.create(c));
   }
 
   // ゲームスタート時のランダマイズで実行

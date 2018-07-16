@@ -184,4 +184,4 @@ const MonsterCardList: { name: string, cardURL: string, cardID: string, cardType
     {name: "絶対王 バック・ジャック", cardURL: "UbinpEbv4pz2", cardID: "UbinpEbv4pz2-3", cardType: CARD_TYPE.MONSTER}
   ];
 
-export default MonsterCardList;
+// export default MonsterCardList;

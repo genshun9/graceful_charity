@@ -76,4 +76,4 @@ const ExtraCardList: { name: string, cardURL: string, cardID: string, cardType: 
     {name: "神騎セイントレア", cardURL: "2_yqxgNcc-Ak", cardID: "2_yqxgNcc-Ak-2", cardType: CARD_TYPE.EXTRA}
   ];
 
-export default ExtraCardList;
+// export default ExtraCardList;

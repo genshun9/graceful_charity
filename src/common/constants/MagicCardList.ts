@@ -58,4 +58,4 @@ const MagicCardList: { name: string, cardURL: string, cardID: string, cardType: 
     {name: "死者蘇生", cardURL: "eTMHGGy7HpES", cardID: "eTMHGGy7HpES-3", cardType: CARD_TYPE.MAGIC}
   ];
 
-export default MagicCardList;
+// export default MagicCardList;

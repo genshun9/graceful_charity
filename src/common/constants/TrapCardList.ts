@@ -58,4 +58,4 @@ const TrapCardList: { name: string, cardURL: string, cardID: string, cardType: n
     {name: "戦線復帰", cardURL: "8yiW3iVgJCEF", cardID: "8yiW3iVgJCEF-3", cardType: CARD_TYPE.TRAP}
   ];
 
-export default TrapCardList;
+// export default TrapCardList;

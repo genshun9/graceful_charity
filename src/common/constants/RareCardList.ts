@@ -40,4 +40,4 @@ const RareCardList: { name: string, cardURL: string, cardID: string, cardType: n
     {name: "神の宣告", cardURL: "vEkresPusEmF", cardID: "vEkresPusEmF-3", cardType: CARD_TYPE.TRAP}
   ];
 
-export default RareCardList;
+// export default RareCardList;

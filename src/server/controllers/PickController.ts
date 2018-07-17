@@ -5,6 +5,7 @@ import {GAME_PROGRESS} from "../../common/constants/Enums";
 import PickedUserCountStore from "../dataStores/PickedUserCountStore";
 import RotationCountStore from "../dataStores/RotationCountStore";
 import {convertPlayers2PlayerIO2, ServerDto} from "../dtos";
+import {ROTATION_MAX_NUMBER} from "../serverApplicationConstants";
 
 class PickController {
   pick(pickData: ServerDto, io): void {
@@ -58,6 +59,34 @@ class PickController {
     if (GameProgressStore.getCache() === GAME_PROGRESS.THIRD_ROUND && RotationCountStore.isMaxRotatoin()) {
       RotationCountStore.end();
       GameProgressStore.end();
+
+      // csvにピック譜を出力する
+      const playerData = PlayerStore.getCache().map(p => ({
+          playerName: p.playerName,
+          cardNameList: p.draftDeckList.map(c => c.name)
+        })
+      );
+      const outputDataForCsv = [];
+      const nameRaw = [];
+      playerData.forEach(p => {
+        nameRaw.push(p.playerName);
+        nameRaw.push("");
+        nameRaw.push("");
+      });
+      outputDataForCsv.push(nameRaw);
+
+      for (let i = 0; i < ROTATION_MAX_NUMBER; i++) {
+        const pickRaw = [];
+        playerData.forEach(p => {
+          pickRaw.push(p.cardNameList[i + ROTATION_MAX_NUMBER * 0]);
+          pickRaw.push(p.cardNameList[i + ROTATION_MAX_NUMBER * 1]);
+          pickRaw.push(p.cardNameList[i + ROTATION_MAX_NUMBER * 2]);
+        });
+        outputDataForCsv.push(pickRaw);
+      }
+
+      console.log(outputDataForCsv);
+
       io.sockets.emit(END, {
         players: convertPlayers2PlayerIO2(PlayerStore.getCache())
       });

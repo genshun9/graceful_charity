@@ -6,6 +6,7 @@ import PickedUserCountStore from "../dataStores/PickedUserCountStore";
 import RotationCountStore from "../dataStores/RotationCountStore";
 import {convertPlayers2PlayerIO2, ServerDto} from "../dtos";
 import {ROTATION_MAX_NUMBER} from "../serverApplicationConstants";
+import * as csv from "csv";
 
 class PickController {
   pick(pickData: ServerDto, io): void {
@@ -85,7 +86,9 @@ class PickController {
         outputDataForCsv.push(pickRaw);
       }
 
-      console.log(outputDataForCsv);
+      csv.stringify(outputDataForCsv, (err, csvData) => {
+        console.log(csvData);
+      });
 
       io.sockets.emit(END, {
         players: convertPlayers2PlayerIO2(PlayerStore.getCache())

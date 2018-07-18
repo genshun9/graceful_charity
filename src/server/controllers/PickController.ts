@@ -7,6 +7,8 @@ import RotationCountStore from "../dataStores/RotationCountStore";
 import {convertPlayers2PlayerIO2, ServerDto} from "../dtos";
 import {ROTATION_MAX_NUMBER} from "../serverApplicationConstants";
 import * as csv from "csv";
+import fs from 'fs';
+import iconv from 'iconv-lite';
 
 class PickController {
   pick(pickData: ServerDto, io): void {
@@ -68,7 +70,7 @@ class PickController {
         })
       );
       const outputDataForCsv = [];
-      const nameRaw = [];
+      const nameRaw = ["プレイヤー名"];
       playerData.forEach(p => {
         nameRaw.push(p.playerName);
         nameRaw.push("");
@@ -77,7 +79,7 @@ class PickController {
       outputDataForCsv.push(nameRaw);
 
       for (let i = 0; i < ROTATION_MAX_NUMBER; i++) {
-        const pickRaw = [];
+        const pickRaw = [`${i+1}ピック目`];
         playerData.forEach(p => {
           pickRaw.push(p.cardNameList[i + ROTATION_MAX_NUMBER * 0]);
           pickRaw.push(p.cardNameList[i + ROTATION_MAX_NUMBER * 1]);
@@ -87,7 +89,7 @@ class PickController {
       }
 
       csv.stringify(outputDataForCsv, (err, csvData) => {
-        console.log(csvData);
+        fs.writeFileSync('assets/pickList.csv', iconv.encode(csvData, 'shift_jis'))
       });
 
       io.sockets.emit(END, {

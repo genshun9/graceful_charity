@@ -11,3 +11,6 @@ node_modules/*
 # Desktop Services Store on macOS
 .DS_Store
 .idea/*
+
+# Others
+assets/pickList.csv

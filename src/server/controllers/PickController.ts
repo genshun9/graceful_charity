@@ -7,8 +7,8 @@ import RotationCountStore from "../dataStores/RotationCountStore";
 import {convertPlayers2PlayerIO2, ServerDto} from "../dtos";
 import {ROTATION_MAX_NUMBER} from "../serverApplicationConstants";
 import * as csv from "csv";
-import fs from 'fs';
-import iconv from 'iconv-lite';
+import * as fs from 'fs';
+import * as iconv from 'iconv-lite';
 
 class PickController {
   pick(pickData: ServerDto, io): void {
